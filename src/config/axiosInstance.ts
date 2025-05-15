@@ -1,7 +1,7 @@
 import axios from 'axios';
-// import EncryptedStorage from 'react-native-encrypted-storage';
 import { API_URL } from '@env';
 import { saveToken, getToken } from '../utils/EncStorage';
+import { ToastAndroid } from 'react-native';
 
 
 const api = axios.create({
@@ -17,18 +17,24 @@ api.interceptors.request.use(
     }
     return config;
   },
-  // error => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-  response => response,
+  response =>  {
+    ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+  return response;
+  },
   error => {
     switch (error.response?.status) {
       case 401:
-        console.log('Unauthorized, maybe redirect to login.');
+        ToastAndroid.show('Unauthorized', ToastAndroid.SHORT);
+        break;
+      case 404:
+        console.log(error);
+        ToastAndroid.show(error.response.data, ToastAndroid.SHORT);
         break;
       default:
-        console.log('Somthing went wrong' + error.response?.status);
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
         return error.response?.status
     }
   }
