@@ -31,7 +31,7 @@ const TypingText = ({ text, speed= 120, delay= 8000 } : { text: string, speed?: 
   }, []);
 
   return (
-    <Text style={styles.typingText}>
+    <Text style={styles().typingText}>
       {displayedText}
       {showCursor ? '|' : ' '}
     </Text>

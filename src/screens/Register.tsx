@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ImageBackground, Text, TextInput, ToastAndroid, View } from 'react-native';
+import React, { useState } from 'react';
+import { ImageBackground, Text, TextInput, View } from 'react-native';
 import { styles } from '../styles/global';
 import { Button } from 'react-native-elements';
 import validator from 'validator';
@@ -54,34 +54,34 @@ const RegisterScreen = () => {
         return false;
     }
     return (
-        <ImageBackground style={styles.background}
+        <ImageBackground style={styles().background}
             source={require('../styles/IMG_20250515_114503.png')}>
-            <View style={styles.backgroundOverlay}></View>
-            <View style={styles.innerContainner}>
-                <Text style={styles.title}>Register new user</Text>
+            <View style={styles().backgroundOverlay}></View>
+            <View style={styles().innerContainner}>
+                <Text style={styles().title}>Register new user</Text>
                 <TextInput
                     placeholder='Email'
                     onChangeText={setEmail}
-                    style={styles.input}></TextInput>
+                    style={styles().input}></TextInput>
                 <TextInput
                     placeholder='Username'
                     onChangeText={setUserName}
-                    style={styles.input}></TextInput>
+                    style={styles().input}></TextInput>
                 <TextInput
                     placeholder='Password'
                     onChangeText={setPassword}
                     secureTextEntry={true}
-                    style={styles.input}></TextInput>
+                    style={styles().input}></TextInput>
                 <TextInput
                     placeholder='Enter password again'
                     onChangeText={setRePassword}
                     secureTextEntry={true}
-                    style={styles.input}></TextInput>
-                <Text style={styles.validateMessaage}>{ValidateMessage || ''}</Text>
-                <Button title="Register" buttonStyle={styles.button}
+                    style={styles().input}></TextInput>
+                <Text style={styles().validateMessaage}>{ValidateMessage || ''}</Text>
+                <Button title="Register" buttonStyle={styles().button}
                     onPress={handleRegister}></Button>
             </View>
-            <Text style={[styles.orText, styles.footer]}>@{new Date().getFullYear()} Utilies</Text>
+            <Text style={[styles().orText, styles().footer]}>@{new Date().getFullYear()} Utilies</Text>
 
         </ImageBackground>
     );

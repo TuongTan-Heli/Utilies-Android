@@ -28,7 +28,7 @@ const LoginScreen = () => {
 
     const handleLogin = async () => {
         const isValid = validateFields();
-        if (isValid) {
+        if (isValid || !validator.isEmpty(sessionToken || '')) {
             const loginStatus = await processLoginRequest(UserName, Password, sessionToken || '');
             if (loginStatus == 200) { //handle different status message to popup for user
                 navigation.navigate('Home');
@@ -46,34 +46,34 @@ const LoginScreen = () => {
     }
 
     return (
-        <ImageBackground style={styles.background}
+        <ImageBackground style={styles().background}
             source={require('../styles/IMG_20250515_114503.png')}>
-            <View style={styles.backgroundOverlay}></View>
+            <View style={styles().backgroundOverlay}></View>
             <TypingText text="Welcome to Utilies"></TypingText>
-            <View style={styles.innerContainner}>
-                <Text style={styles.title}>Login</Text>
+            <View style={styles().innerContainner}>
+                <Text style={styles('white').title}>Login</Text>
                 <TextInput
                     placeholder='Username or Email'
                     onChangeText={setUserName}
-                    style={styles.input}></TextInput>
+                    style={styles().input}></TextInput>
                 <TextInput
                     placeholder='Password'
                     secureTextEntry={true}
                     onChangeText={setPassword}
-                    style={styles.input}></TextInput>
-                <Text style={styles.validateMessaage}>{ValidateMessage || ''}</Text>
+                    style={styles().input}></TextInput>
+                <Text style={styles().validateMessaage}>{ValidateMessage || ''}</Text>
 
-                <Button buttonStyle={styles.button} title="Login"
+                <Button buttonStyle={styles().button} title="Login"
                     onPress={handleLogin}></Button>
-                <View style={styles.separatorContainer}>
-                    <View style={styles.line} />
-                    <Text style={styles.orText}>or</Text>
-                    <View style={styles.line} />
+                <View style={styles().separatorContainer}>
+                    <View style={styles().line} />
+                    <Text style={styles().orText}>or</Text>
+                    <View style={styles().line} />
                 </View>
-                <Button buttonStyle={styles.button} title="Register"
+                <Button buttonStyle={styles().button} title="Register"
                     onPress={() => { navigation.navigate('Register') }}></Button>
             </View>
-            <Text style={[styles.orText, styles.footer]}>@{new Date().getFullYear()} Utilies</Text>
+            <Text style={[styles().orText, styles().footer]}>@{new Date().getFullYear()} Utilies</Text>
 
         </ImageBackground>
     );

@@ -1,5 +1,5 @@
 import { removeToken, saveToken } from "../utils/EncStorage";
-import { login, register } from "./authApi"
+import { login, register } from "../api/authApi"
 
 export const processLoginRequest = async (UserName: string, Password: string, sessionToken: string) => {
     const response = await login(UserName, Password, sessionToken || '');
