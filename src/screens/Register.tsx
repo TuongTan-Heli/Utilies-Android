@@ -20,7 +20,7 @@ const RegisterScreen = () => {
         const isValid = validateFields();
         if (isValid) {
             const registerStatus = await processRegisterRequest(UserName, Password, Email);
-            if (registerStatus == 200) { 
+            if (registerStatus == 200) {
                 navigation.navigate('Login');
             }
         }
@@ -58,21 +58,25 @@ const RegisterScreen = () => {
             source={require('../styles/IMG_20250515_114503.png')}>
             <View style={styles().backgroundOverlay}></View>
             <View style={styles().innerContainner}>
-                <Text style={styles().title}>Register new user</Text>
+                <Text style={[styles().title, {textAlign: 'center'}]}>Register new user</Text>
                 <TextInput
+                    placeholderTextColor="#888"
                     placeholder='Email'
                     onChangeText={setEmail}
                     style={styles().input}></TextInput>
                 <TextInput
+                    placeholderTextColor="#888"
                     placeholder='Username'
                     onChangeText={setUserName}
                     style={styles().input}></TextInput>
                 <TextInput
+                    placeholderTextColor="#888"
                     placeholder='Password'
                     onChangeText={setPassword}
                     secureTextEntry={true}
                     style={styles().input}></TextInput>
                 <TextInput
+                    placeholderTextColor="#888"
                     placeholder='Enter password again'
                     onChangeText={setRePassword}
                     secureTextEntry={true}

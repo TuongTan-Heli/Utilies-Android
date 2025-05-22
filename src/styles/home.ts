@@ -2,32 +2,33 @@ import { StyleSheet } from "react-native";
 
 export const homeStyles = StyleSheet.create({
     header: {
-        top: 15,
+        // top: 30,
+        marginTop: '10%',
+        marginBottom: '5%',
+        justifyContent: 'center',
+        width: '90%',
+        height: '10%'
     },
     cardContainer: {
         width: '90%',
+        height: '85%',
     },
     card: {
-        opacity: 1,
+        flexDirection: 'row',
         backgroundColor: 'white',
         marginBottom: 15,
         borderRadius: 15,
         padding: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 3,
-        elevation: 200,
+        elevation: 7,
         borderWidth: 3,
-        borderColor: '#E0E0E0'
+        borderColor: '#E0E0E0',
+        gap: 10,
     },
 
     cardContent: {
-        alignSelf: 'stretch',
-        flexGrow: 1, 
-        marginLeft: 15,
-        padding: 10,
-        alignContent: 'flex-end',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
+                flexShrink: 1
+
     },
     title: {
         fontWeight: "bold",
@@ -36,12 +37,10 @@ export const homeStyles = StyleSheet.create({
     },
     description: {
         fontSize: 15,
-        fontFamily: 'sans-serif-condensed',
-                color: '#929db4'
+        color: '#929db4',
 
     },
     cardPressed: {
-        // backgroundColor: '#2980b9',
         opacity: 1,
     },
 });

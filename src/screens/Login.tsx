@@ -55,8 +55,10 @@ const LoginScreen = () => {
                 <TextInput
                     placeholder='Username or Email'
                     onChangeText={setUserName}
+                    placeholderTextColor="#888"
                     style={styles().input}></TextInput>
                 <TextInput
+                placeholderTextColor="#888"
                     placeholder='Password'
                     secureTextEntry={true}
                     onChangeText={setPassword}

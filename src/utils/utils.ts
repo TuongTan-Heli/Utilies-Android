@@ -1,5 +1,5 @@
 export const handleDataFromFireStore = (data: any) => {
-    const extractedData = [];
+    const extractedData: itemFromFireStore[] = [];
     for (const item of data) {
         const itemData = { data: Object, id: String };
         itemData.data = item._fieldsProto;
@@ -7,4 +7,9 @@ export const handleDataFromFireStore = (data: any) => {
         extractedData.push(itemData);
     }
     return extractedData
+}
+
+interface itemFromFireStore {
+    id: any;
+    data: any;
 }

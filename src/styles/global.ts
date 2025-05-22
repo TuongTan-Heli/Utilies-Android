@@ -7,7 +7,7 @@ export const styles = (color?: string) => StyleSheet.create({
         alignItems: 'center',
     },
     background: {
-        flex: 1,
+        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#f2f6fd'
@@ -33,6 +33,7 @@ export const styles = (color?: string) => StyleSheet.create({
     input: {
         backgroundColor: '#FFFFFF',
         // borderWidth: 1,
+        color: 'black',
         padding: 10,
         marginBottom: 10,
         borderRadius: 8,
@@ -76,7 +77,8 @@ export const styles = (color?: string) => StyleSheet.create({
         paddingBottom: 50,
         fontSize: 50,
         fontWeight: 'bold',
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        textAlign:'center'
     },
     validateMessaage: {
         color: 'rgb(218, 32, 32)',
@@ -104,13 +106,13 @@ export const styles = (color?: string) => StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold',
         alignSelf: 'center',
-        paddingBottom: 50,
+        textAlign: 'center'
     },
     //Task style
     taskDashboard: {
         width: '90%',
         height: '50%',
-        flexDirection: 'row',
+        // flexDirection: 'row',
         gap: 10
     },
     taskList: {
@@ -157,17 +159,21 @@ export const styles = (color?: string) => StyleSheet.create({
         marginBottom: 10,
         borderRadius: 8,
         alignItems: 'center',
-         width: '100%'
+        width: '100%'
     },
     numericBox: {
         width: '100%',
-
-        // borderWidth: 1,
-        // borderColor: '#efefef',
         marginBottom: 10,
-        // borderRadius: 8,
+    },
+    flexDirectionRow: {
+        flexDirection: 'row'
+    },
+    
+    logoutButton: {
+        right:0,
+        top: 0,
+        position:'absolute'
     }
-
 })
 
 
