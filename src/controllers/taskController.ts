@@ -3,7 +3,7 @@ import { add, deleteTask, getAllTask, update } from "../api/taskApi";
 
 
 export const processAddTask = async (TaskName: string, Description: string, Type: string, Deadline: Date, EnableNoti: boolean, Priority: number, NotiOnDeadline: number, Price: number, Currency: string) => {
-    const UserId = JSON.parse(await getToken('userInfo') || '').UserId;
+    const UserId = JSON.parse(await getToken('userInfo') || '').id;
     if (UserId) {
 
         const response = await add(UserId, TaskName, Description, Type, Deadline, EnableNoti, Priority, NotiOnDeadline, Price, Type == "To do" ? '' : Currency);
@@ -23,7 +23,7 @@ export const processDeleteTask = async (TaskId: string) => {
 
 
 export const getUserTask = async () => {
-    const UserId = JSON.parse(await getToken('userInfo') || '').UserId;
+    const UserId = JSON.parse(await getToken('userInfo') || '').id;
     if (UserId) {
         const response = await getAllTask(UserId);
         return response.data;

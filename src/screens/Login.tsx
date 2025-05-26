@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Text, TextInput, View } from 'react-native';
+import { ImageBackground, SafeAreaView, Text, TextInput, View } from 'react-native';
 import { getToken } from '../utils/EncStorage';
 import { processLoginRequest } from '../controllers/userController';
 import { useNavigation } from '@react-navigation/native';
@@ -46,7 +46,8 @@ const LoginScreen = () => {
     }
 
     return (
-        <ImageBackground style={styles().background}
+        <SafeAreaView style={{ flex: 1 }}>
+               <ImageBackground style={styles().background}
             source={require('../styles/IMG_20250515_114503.png')}>
             <View style={styles().backgroundOverlay}></View>
             <TypingText text="Welcome to Utilies"></TypingText>
@@ -78,6 +79,8 @@ const LoginScreen = () => {
             <Text style={[styles().orText, styles().footer]}>@{new Date().getFullYear()} Utilies</Text>
 
         </ImageBackground>
+        </SafeAreaView>
+     
     );
 };
 

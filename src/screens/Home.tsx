@@ -22,17 +22,15 @@ const HomeScreen = () => {
         <ImageBackground style={staticStyles.background}
             source={require('../styles/IMG_20250515_114503.png')}>
             <View style={staticStyles.backgroundOverlay}></View>
-            <View style={[homeStyles.header, staticStyles.flexDirectionRow]}>
                 <Pressable style={staticStyles.logoutButton}
                     onPress={() => {
                         handleLogout()
                     }}>
                     <SimpleLineIcons name="logout" color={"red"} size={24} />
                 </Pressable>
-                <Text style={staticStyles.title}>Title</Text>
-            </View>
+                <Text style={styles('white').title}>Welcome to Utilies</Text>
             <ScrollView style={homeStyles.cardContainer}
-                >
+            >
                 <IconCard
                     IconComponent={MaterialCommunityIcons}
                     iconName="format-list-numbered"
@@ -48,7 +46,7 @@ const HomeScreen = () => {
                     cardTitle="View your spending"
                     cardDescription="View your record on spending"
                     backgroundColor="#775cce"
-                    directPage="TaskHome"
+                    directPage="SpendingHome"
                 />
                 <IconCard
                     IconComponent={Ionicons}

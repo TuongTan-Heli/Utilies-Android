@@ -2,12 +2,10 @@ import { StyleSheet } from "react-native";
 
 export const homeStyles = StyleSheet.create({
     header: {
-        // top: 30,
         marginTop: '10%',
-        marginBottom: '5%',
         justifyContent: 'center',
         width: '90%',
-        height: '10%'
+        height: '20%'
     },
     cardContainer: {
         width: '90%',

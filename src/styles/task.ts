@@ -4,9 +4,8 @@ export const taskStyles = StyleSheet.create({
     //Task style
     taskDashboard: {
         width: '90%',
-        height: '50%',
-        // flexDirection: 'row',
-        // gap: 10
+        flex: 1,
+        marginBottom: 50
     },
     taskDashboardTop: {
         flexDirection: 'row',

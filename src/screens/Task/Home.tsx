@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Pressable, Text, TextInput, View } from 'react-native';
+import { ImageBackground, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { styles } from '../../styles/global';
 import { Button } from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -12,6 +12,8 @@ import { getAll } from '../../controllers/currencyController';
 import { taskStyles } from '../../styles/task';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import validator from 'validator';
+import { getToken } from '../../utils/EncStorage';
+import { formToJSON } from 'axios';
 
 
 const TaskHomeScreen = () => {
@@ -40,12 +42,20 @@ const TaskHomeScreen = () => {
   }, [])
   const fetch = async () => {
     const Task = (await getUserTask()).data;
-    setToDoTask(Task.filter((x: any) => x.data.Type == 'To do'));
-    setToBuyTask(Task.filter((x: any) => x.data.Type == 'To buy'));
+    setToDoTask(Task.filter((x: any) => x.Type == 'To do'));
+    setToBuyTask(Task.filter((x: any) => x.Type == 'To buy'));
     setCurrencies((await getAll()).data);
   }
   useEffect(() => {
-    SetDefaultCurrency(currencies.find(x => x.data?.Name == "AUD")?.id || "");
+    async function fetchUserCurrency() {
+      const userDefaultCurrency = JSON.parse(await getToken('userInfo') || '');
+
+      console.log(userDefaultCurrency);
+      SetDefaultCurrency(currencies.find(x => x.Name == "AUD")?.id || "");
+    }
+
+    fetchUserCurrency();
+
   }, [currencies])
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
@@ -77,7 +87,7 @@ const TaskHomeScreen = () => {
     const isValid = validateFields();
     if (isValid) {
       if (task) {
-        status = await processUpdateTask(task.id, task.data.Name, task.data.Description, task.data.Type, task.data.Deadline, task.data.Done, task.data.EnableNoti, task.data.Priority, task.data.NotiOnDeadline, task.data.Price, task.data.Currency);
+        status = await processUpdateTask(task.id, task.Name, task.Description, task.Type, task.Deadline, task.Done, task.EnableNoti, task.Priority, task.NotiOnDeadline, task.Price, task.Currency);
       }
       else {
         status = await processUpdateTask(TaskId, TaskName, Description, Type, Deadline, Done, EnableNoti, Priority, NotiOnDeadline, Price, Currency);
@@ -97,16 +107,16 @@ const TaskHomeScreen = () => {
 
     setTaskId(task.id);
 
-    setTaskName(task.data.Name);
-    setDescription(task.data.Description);
-    setDeadline(new Date(task.data.Deadline));
-    setType(task.data.Type);
-    setEnableNoti(task.data.EnableNoti);
-    setDone(task.data.Done);
-    setPriority(task.data.Priority);
-    setNotiOnDeadline(task.data.NotiOnDeadline);
-    setPrice(task.data.Price);
-    setCurrency(task.data.Currency?.id);
+    setTaskName(task.Name);
+    setDescription(task.Description);
+    setDeadline(new Date(task.Deadline));
+    setType(task.Type);
+    setEnableNoti(task.EnableNoti);
+    setDone(task.Done);
+    setPriority(task.Priority);
+    setNotiOnDeadline(task.NotiOnDeadline);
+    setPrice(task.Price);
+    setCurrency(task.Currency?.id);
   }
 
   const showAddTask = (isOpen: boolean) => {
@@ -136,11 +146,11 @@ const TaskHomeScreen = () => {
   }
 
   const markTaskDone = async (task: any) => {
-    if (task.data.Done) {
-      task.data.Done = null;
+    if (task.Done) {
+      task.Done = null;
     }
     else {
-      task.data.Done = new Date();
+      task.Done = new Date();
     }
     handleUpdateTask(task);
   }
@@ -152,9 +162,11 @@ const TaskHomeScreen = () => {
     }
   }
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={staticStyles.background}>
-        <Text style={staticStyles.title}>MY TASK</Text>
+        <View style={staticStyles.thirtyLightblueBackground}>
+        </View>
+        <Text style={[styles('white').title]}>MY TASK</Text>
         <View style={taskStyles.taskDashboard}>
           {/* Todo */}
           <View style={taskStyles.taskDashboardTop}>
@@ -173,7 +185,7 @@ const TaskHomeScreen = () => {
             </View>
 
           </View>
-          <View style={taskStyles.taskDashboardContent}>
+          <ScrollView style={taskStyles.taskDashboardContent}>
             {ToDoSelected && TodoTask.map(task => {
               return (
                 <Pressable key={task.id} onPress={() => { showEditTask(task) }} style={taskStyles.taskRow}>
@@ -181,9 +193,9 @@ const TaskHomeScreen = () => {
                     onPress={() => {
                       markTaskDone(task)
                     }}>
-                    <SimpleLineIcons name="check" color={task.data.Done ? "#51cf66" : "#495057"} size={24} />
+                    <SimpleLineIcons name="check" color={task.Done ? "#51cf66" : "#495057"} size={24} />
                   </Pressable>
-                  <Text style={taskStyles.taskName}>{task.data.Name}</Text>
+                  <Text style={taskStyles.taskName}>{task.Name}</Text>
                   <Pressable style={taskStyles.deleteButton}
                     onPress={() => {
                       handleDeleteTask(task.id)
@@ -201,9 +213,9 @@ const TaskHomeScreen = () => {
                     onPress={() => {
                       markTaskDone(task)
                     }}>
-                    <SimpleLineIcons name="check" color={task.data.Done ? "#51cf66" : "#495057"} size={24} />
+                    <SimpleLineIcons name="check" color={task.Done ? "#51cf66" : "#495057"} size={24} />
                   </Pressable>
-                  <Text style={taskStyles.taskName}>{task.data.Name} : {task.data.Price}</Text>
+                  <Text style={taskStyles.taskName}>{task.Name} : {task.Price} {task.Currency.Name}</Text>
                   <Pressable style={taskStyles.deleteButton}
                     onPress={() => {
                       handleDeleteTask(task.id)
@@ -214,17 +226,17 @@ const TaskHomeScreen = () => {
               )
             })}
 
-          </View>
-          <View style={taskStyles.taskDashboardBottom}>
-            <Pressable
-              style={staticStyles.iconSmall}
-              onPress={() => { showAddTask(true) }}>
-              <AntDesign name="pluscircleo" color="#495057" size={24} />
-            </Pressable>
-            <Text style={taskStyles.taskName}>Add new task</Text>
-          </View>
-        </View>
+          </ScrollView>
 
+        </View>
+        <View style={[taskStyles.taskDashboardBottom, { marginBottom: 20 }]}>
+          <Pressable
+            style={staticStyles.iconSmall}
+            onPress={() => { showAddTask(true) }}>
+            <AntDesign name="pluscircleo" color="#495057" size={24} />
+          </Pressable>
+          <Text style={taskStyles.taskName}>Add new task</Text>
+        </View>
       </View>
       {/* //Add task modal */}
       <Modal
@@ -296,7 +308,7 @@ const TaskHomeScreen = () => {
                       style={{ color: 'black' }}>
                       {currencies.map(currency => (
                         <Picker.Item key={currency.id}
-                          label={currency.data.Name}
+                          label={currency.Name}
                           value={currency.id} />
                       ))}
                     </Picker>
@@ -311,7 +323,7 @@ const TaskHomeScreen = () => {
           </View>
         </View>
       </Modal>
-    </>
+    </SafeAreaView>
 
 
   );

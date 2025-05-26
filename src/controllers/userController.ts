@@ -7,8 +7,8 @@ export const processLoginRequest = async (UserName: string, Password: string, se
         const data = response.data;
         saveToken('API_KEY', data.apiKey.ApiKey);
         saveToken('SESSION_TOKEN', data.sessionToken.SessionToken);
-        data.data.UserId = data.apiKey.User._path.segments[1];
-        saveToken('userInfo', JSON.stringify(data.data));
+        
+        saveToken('userInfo', JSON.stringify(data.apiKey.User));
         saveToken('logStatus', 'logged');
     }
     else {

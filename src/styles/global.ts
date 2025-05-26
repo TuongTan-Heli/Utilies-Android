@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const styles = (color?: string) => StyleSheet.create({
     container: {
@@ -7,15 +7,25 @@ export const styles = (color?: string) => StyleSheet.create({
         alignItems: 'center',
     },
     background: {
-        // flex: 1,
-        justifyContent: 'center',
+        flex: 1,
+        zIndex:0,
         alignItems: 'center',
-        backgroundColor: '#f2f6fd'
+        backgroundColor: '#f2f6fd',
+        paddingTop: '5%'
     },
     backgroundOverlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
         ...StyleSheet.absoluteFillObject,
-        zIndex: 0,
+        // zIndex: 0,
+    },
+    thirtyLightblueBackground: {
+        backgroundColor: '#99d9ea',
+        width: '100%',
+        height: '33%',
+        borderBottomRightRadius: 70,
+        borderBottomLeftRadius: 70,
+        position: 'absolute',
+        top: 0,
     },
     innerContainner: {
         opacity: 1,
@@ -25,6 +35,9 @@ export const styles = (color?: string) => StyleSheet.create({
     text: {
         fontSize: 20,
         marginBottom: 10
+    },
+    textColor: {
+        color: color
     },
     smallText: {
         fontSize: 14,
@@ -78,7 +91,7 @@ export const styles = (color?: string) => StyleSheet.create({
         fontSize: 50,
         fontWeight: 'bold',
         color: '#FFFFFF',
-        textAlign:'center'
+        textAlign: 'center'
     },
     validateMessaage: {
         color: 'rgb(218, 32, 32)',
@@ -106,7 +119,9 @@ export const styles = (color?: string) => StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold',
         alignSelf: 'center',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom:'10%',
+        marginTop: '10%'
     },
     //Task style
     taskDashboard: {
@@ -168,11 +183,11 @@ export const styles = (color?: string) => StyleSheet.create({
     flexDirectionRow: {
         flexDirection: 'row'
     },
-    
+
     logoutButton: {
-        right:0,
-        top: 0,
-        position:'absolute'
+        right: 20,
+        top: 20,
+        position: 'absolute'
     }
 })
 
