@@ -11,6 +11,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import IconCard from '../utils/Card';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { useEffect } from 'react';
 const HomeScreen = () => {
     const staticStyles = styles();
     const navigation = useNavigation<any>();

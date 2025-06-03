@@ -1,3 +1,5 @@
+import { getToken } from "./EncStorage";
+
 export const handleDataFromFireStore = (data: any) => {
     const extractedData: itemFromFireStore[] = [];
     for (const item of data) {
@@ -12,4 +14,21 @@ export const handleDataFromFireStore = (data: any) => {
 interface itemFromFireStore {
     id: any;
     data: any;
+}
+
+export function groupBy<T>(array: T[], key: keyof T, knownTypes: string[]): Record<string, T[]> {
+  return array.reduce((result, currentItem) => {
+    const rawKey = currentItem[key] as unknown as string;
+    const groupKey = knownTypes.includes(rawKey) ? rawKey : "Others";
+
+    if (!result[groupKey]) {
+      result[groupKey] = [];
+    }
+    result[groupKey].push(currentItem);
+    return result;
+  }, {} as Record<string, T[]>);
+}
+
+export async function getUserDefaultCurrency() {
+  return JSON.parse(await getToken('userInfo') || '').DefaultCurrency;
 }

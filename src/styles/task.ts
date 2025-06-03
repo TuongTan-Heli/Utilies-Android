@@ -61,25 +61,8 @@ export const taskStyles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10
     },
-    addTaskOverlay: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        padding: 20,
-        zIndex: 3
-    },
-    addTaskContainer: {
-        width: '90%',
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        alignItems: 'center',
-    },
-    addTaskContentContainer: {
-        paddingTop: 40,
-        width: '100%',
-    },
+    
+    
     taskRow: {
         flexDirection: 'row',
         borderBottomColor: '#dadada',

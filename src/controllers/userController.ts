@@ -1,5 +1,6 @@
-import { removeToken, saveToken } from "../utils/EncStorage";
+import { getToken, removeToken, saveToken } from "../utils/EncStorage";
 import { login, register } from "../api/authApi"
+import { ToastAndroid } from "react-native";
 
 export const processLoginRequest = async (UserName: string, Password: string, sessionToken: string) => {
     const response = await login(UserName, Password, sessionToken || '');
@@ -7,15 +8,17 @@ export const processLoginRequest = async (UserName: string, Password: string, se
         const data = response.data;
         saveToken('API_KEY', data.apiKey.ApiKey);
         saveToken('SESSION_TOKEN', data.sessionToken.SessionToken);
-        
-        saveToken('userInfo', JSON.stringify(data.apiKey.User));
+
+        saveToken('userInfo', JSON.stringify(data.data));
         saveToken('logStatus', 'logged');
+        ToastAndroid.show('Login successfull', ToastAndroid.SHORT);
     }
     else {
         removeToken('API_KEY');
         removeToken('SESSION_TOKEN');
         removeToken('userInfo');
     }
+
     return response.status;
 }
 

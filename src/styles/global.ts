@@ -1,5 +1,4 @@
 import { Dimensions, StyleSheet } from "react-native";
-
 export const styles = (color?: string) => StyleSheet.create({
     container: {
         flex: 1,
@@ -13,6 +12,13 @@ export const styles = (color?: string) => StyleSheet.create({
         backgroundColor: '#f2f6fd',
         paddingTop: '5%'
     },
+     backgroundScrollView: {
+        flex: 1,
+        zIndex:0,
+        // alignItems: 'center',
+        backgroundColor: '#f2f6fd',
+        // paddingTop: '5%'
+    },
     backgroundOverlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
         ...StyleSheet.absoluteFillObject,
@@ -21,7 +27,7 @@ export const styles = (color?: string) => StyleSheet.create({
     thirtyLightblueBackground: {
         backgroundColor: '#99d9ea',
         width: '100%',
-        height: '33%',
+        height: Dimensions.get('window').height * (3/10),
         borderBottomRightRadius: 70,
         borderBottomLeftRadius: 70,
         position: 'absolute',
@@ -120,8 +126,8 @@ export const styles = (color?: string) => StyleSheet.create({
         fontWeight: 'bold',
         alignSelf: 'center',
         textAlign: 'center',
-        marginBottom:'10%',
-        marginTop: '10%'
+        marginBottom: 8,
+        marginTop: 8
     },
     //Task style
     taskDashboard: {
@@ -188,7 +194,26 @@ export const styles = (color?: string) => StyleSheet.create({
         right: 20,
         top: 20,
         position: 'absolute'
-    }
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        padding: 20,
+        zIndex: 3
+    },
+    modalContainer: {
+        width: '90%',
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    modalContentContainer: {
+        paddingTop: 40,
+        width: '100%',
+    },
 })
 
 

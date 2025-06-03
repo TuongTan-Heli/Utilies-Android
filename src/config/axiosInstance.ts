@@ -21,7 +21,6 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   response =>  {
-    ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
   return response;
   },
   error => {
@@ -30,7 +29,6 @@ api.interceptors.response.use(
         ToastAndroid.show('Unauthorized', ToastAndroid.SHORT);
         break;
       case 404:
-        console.log(error);
         ToastAndroid.show(error.response.data, ToastAndroid.SHORT);
         break;
       default:

@@ -13,7 +13,7 @@ import { taskStyles } from '../../styles/task';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import validator from 'validator';
 import { getToken } from '../../utils/EncStorage';
-import { formToJSON } from 'axios';
+import { getUserDefaultCurrency } from '../../utils/utils';
 
 
 const TaskHomeScreen = () => {
@@ -35,7 +35,7 @@ const TaskHomeScreen = () => {
   const [ToDoSelected, setToDoSelected] = useState(true);
   const [Done, setDone] = useState(new Date(+0));
   const [ValidateMessage, setValidateMessage] = useState('');
-  const [defaultCurrency, SetDefaultCurrency] = useState('');
+  const [DefaultCurrency, setDefaultCurrency] = useState<any>({});
 
   useEffect(() => {
     fetch();
@@ -43,20 +43,11 @@ const TaskHomeScreen = () => {
   const fetch = async () => {
     const Task = (await getUserTask()).data;
     setToDoTask(Task.filter((x: any) => x.Type == 'To do'));
+    setDefaultCurrency(await getUserDefaultCurrency());
     setToBuyTask(Task.filter((x: any) => x.Type == 'To buy'));
-    setCurrencies((await getAll()).data);
+    const allCurencies = await getToken('ALL_CURRENCIES');
+    setCurrencies(JSON.parse(allCurencies ?? ''));
   }
-  useEffect(() => {
-    async function fetchUserCurrency() {
-      const userDefaultCurrency = JSON.parse(await getToken('userInfo') || '');
-
-      console.log(userDefaultCurrency);
-      SetDefaultCurrency(currencies.find(x => x.Name == "AUD")?.id || "");
-    }
-
-    fetchUserCurrency();
-
-  }, [currencies])
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     setDeadline(currentDate);
@@ -72,10 +63,10 @@ const TaskHomeScreen = () => {
 
   const staticStyles = styles();
   const handleAddNewTask = async () => {
-    const isValid = validateFields();
+    const isValid = validateFields(null);
     if (isValid) {
-      const loginStatus = await processAddTask(TaskName, Description, Type, Deadline, EnableNoti, Priority, NotiOnDeadline, Price, Currency);
-      if (loginStatus == 200) {
+      const status = await processAddTask(TaskName, Description, Type, Deadline, EnableNoti, Priority, NotiOnDeadline, Price, Currency);
+      if (status == 200) {
         fetch();
         showAddTask(false);
       }
@@ -84,7 +75,7 @@ const TaskHomeScreen = () => {
 
   const handleUpdateTask = async (task: any) => {
     let status = 0;
-    const isValid = validateFields();
+    const isValid = validateFields(task);
     if (isValid) {
       if (task) {
         status = await processUpdateTask(task.id, task.Name, task.Description, task.Type, task.Deadline, task.Done, task.EnableNoti, task.Priority, task.NotiOnDeadline, task.Price, task.Currency);
@@ -130,17 +121,30 @@ const TaskHomeScreen = () => {
     setEnableNoti(false);
     setNotiOnDeadline(0);
     setPrice(0);
-    setCurrency(defaultCurrency);
+    setCurrency(DefaultCurrency.id);
   }
 
-  const validateFields = () => {
-    let message = '';
-    if (validator.isEmpty(TaskName)) {
-      message += '* Please fill in task name';
+  const validateFields = (task: any) => {
+    
+      let message = '';
+    if (task) {
+      if (validator.isEmpty(task.Name)) {
+        message += '* Please fill in task name';
+      }
+      if (task.Price == 0 && task.Type == "To buy") {
+        message += '\n * Please fill in price';
+      }
     }
-    if (Price == 0 && Type == "To buy") {
-      message += '\n * Please fill in price';
+    else {
+      if (validator.isEmpty(TaskName)) {
+        message += '* Please fill in task name';
+      }
+      if (Price == 0 && Type == "To buy") {
+        message += '\n * Please fill in price';
+      }
     }
+
+
     setValidateMessage(message);
     return message == '' ? true : false;
   }
@@ -151,6 +155,10 @@ const TaskHomeScreen = () => {
     }
     else {
       task.Done = new Date();
+    }
+    setTaskName(task.Name);
+    if (task.Type == "To buy") {
+      setPrice(task.Amount);
     }
     handleUpdateTask(task);
   }
@@ -244,13 +252,13 @@ const TaskHomeScreen = () => {
         visible={addTask}
         animationType='slide'
         onRequestClose={() => showAddTask(false)}>
-        <View style={taskStyles.addTaskOverlay}>
-          <View style={taskStyles.addTaskContainer}>
+        <View style={staticStyles.addTaskOverlay}>
+          <View style={staticStyles.addTaskContainer}>
             <Pressable style={[staticStyles.iconSmall, staticStyles.iconClose]}
               onPress={() => showAddTask(false)}>
               <AntDesign name="close" color="#787878" size={24} />
             </Pressable>
-            <View style={taskStyles.addTaskContentContainer}>
+            <View style={staticStyles.modalContentContainer}>
               <Text style={styles('black').title}>{isEditTask ? "Update task" : "Add new task"}</Text>
               <TextInput
                 value={TaskName}
