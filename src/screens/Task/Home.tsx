@@ -42,11 +42,20 @@ const TaskHomeScreen = () => {
   }, [])
   const fetch = async () => {
     const Task = (await getUserTask()).data;
+    Task.forEach(task => {
+      if (task.Deadline) {
+        task.Deadline = new Date(task.Deadline._seconds * 1000)
+      }
+      if (task.Done) {
+        task.Done = new Date(task.Done._seconds * 1000)
+      }
+    });
     setToDoTask(Task.filter((x: any) => x.Type == 'To do'));
     setDefaultCurrency(await getUserDefaultCurrency());
     setToBuyTask(Task.filter((x: any) => x.Type == 'To buy'));
     const allCurencies = await getToken('ALL_CURRENCIES');
     setCurrencies(JSON.parse(allCurencies ?? ''));
+    console.log(Task)
   }
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
@@ -92,7 +101,6 @@ const TaskHomeScreen = () => {
   }
 
   const showEditTask = (task: any) => {
-    console.log(task);
     setAddTask(true);
     setIsEditTask(true);
 
@@ -103,7 +111,7 @@ const TaskHomeScreen = () => {
     setDeadline(new Date(task.Deadline));
     setType(task.Type);
     setEnableNoti(task.EnableNoti);
-    setDone(task.Done);
+    setDone(new Date(task.Done));
     setPriority(task.Priority);
     setNotiOnDeadline(task.NotiOnDeadline);
     setPrice(task.Price);
@@ -125,8 +133,8 @@ const TaskHomeScreen = () => {
   }
 
   const validateFields = (task: any) => {
-    
-      let message = '';
+
+    let message = '';
     if (task) {
       if (validator.isEmpty(task.Name)) {
         message += '* Please fill in task name';

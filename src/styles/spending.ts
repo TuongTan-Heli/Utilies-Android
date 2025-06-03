@@ -12,7 +12,6 @@ export const spendingStyles = StyleSheet.create({
     },
 
     remaining: {
-        // marginTop: '10%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         flexShrink: 1,
@@ -39,7 +38,7 @@ export const spendingStyles = StyleSheet.create({
     },
     remainingText: {
         color: 'white',
-        fontSize: 25,
+        fontSize: 20,
         textAlign: 'center',
         fontWeight: 'bold'
     },

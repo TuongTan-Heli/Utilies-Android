@@ -26,7 +26,7 @@ api.interceptors.response.use(
   error => {
     switch (error.response?.status) {
       case 401:
-        ToastAndroid.show('Unauthorized', ToastAndroid.SHORT);
+        ToastAndroid.show(error.response.data, ToastAndroid.SHORT);
         break;
       case 404:
         ToastAndroid.show(error.response.data, ToastAndroid.SHORT);

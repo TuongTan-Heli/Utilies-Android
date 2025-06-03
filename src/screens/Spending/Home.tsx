@@ -10,12 +10,13 @@ import { Picker } from "@react-native-picker/picker";
 import CheckBox from "@react-native-community/checkbox";
 import { Button } from "react-native-elements";
 import { getSpendingInMonth, getSpendingInWeek, processAddSpending } from "../../controllers/spendingController";
-import { processAddBudget } from "../../controllers/budgetController";
-import { processAddRemaining } from "../../controllers/remainingController";
+import { processAddBudget, processGetLatestBudget } from "../../controllers/budgetController";
+import { processAddRemaining, processGetLatestRemaining } from "../../controllers/remainingController";
 import CarouselComponent from "../../utils/Carousel";
 import PieChartComponent from "../../utils/PieChart";
 import { getUserDefaultCurrency, groupBy } from "../../utils/utils";
 import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
 
 const SpendingHomeScreen = () => {
     const staticStyles = styles();
@@ -46,6 +47,9 @@ const SpendingHomeScreen = () => {
     const [spendingInMonthCooked, setSpendingInMonthCooked] = useState<Record<string, any>>({});
     const [spendingInWeekCooked, setSpendingInWeekCooked] = useState<Record<string, any>>({});
 
+    const [LatestBudget, setLatestBudget] = useState<any>({});
+    const [LatestRemaining, setLatestRemaining] = useState<any>({});
+
     useEffect(() => {
         fetch();
     }, [])
@@ -53,6 +57,21 @@ const SpendingHomeScreen = () => {
         const allCurencies = await getToken('ALL_CURRENCIES');
         setCurrencies(JSON.parse(allCurencies ?? ''));
         setDefaultCurrency(await getUserDefaultCurrency());
+        try {
+            const budgetResponse = await processGetLatestBudget();
+            if (budgetResponse?.status == "Success") {
+                setLatestBudget(budgetResponse.data);
+            }
+        }
+        catch (err) {}
+
+        try {
+            const remainingResponse = await processGetLatestRemaining();
+            if (remainingResponse?.status == "Success") {
+                setLatestRemaining(remainingResponse.data);
+            }
+        }
+        catch (err) {}
         //getspending in week and analyze
         const monthSpending = await getSpendingInMonth();
         const weekSpending = await getSpendingInWeek();
@@ -147,84 +166,81 @@ const SpendingHomeScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={staticStyles.backgroundScrollView} contentContainerStyle={{ alignItems: 'center' }}>
-                {/* <ScrollView contentContainerStyle={{ alignItems: 'center' }} style={{ width: '100%'}}> */}
-                    <View style={staticStyles.thirtyLightblueBackground}>
-                    </View>
-                    {/* <Text style={styles('white').title}>Manage your expense</Text> */}
-                    <View style={spendingStyles.header}>
-                        <Text style={styles('white').title}>Manage your expense</Text>
+                <View style={staticStyles.thirtyLightblueBackground}>
+                </View>
+                <ScrollView style={spendingStyles.header}>
+                    <Text style={styles('white').title}>Manage your expense</Text>
 
-                        <View style={spendingStyles.remaining}>
-                            <View>
-                                <Text style={spendingStyles.remainingText}>Balance: .... AUD</Text>
-                                <Text style={spendingStyles.remainingText}>Budget: ... AUD till ...</Text>
-                            </View>
-                            {/* <Text style={spendingStyles.viewMoreText}>View more >></Text> */}
-                            <Pressable style={spendingStyles.viewMoreButton}>
-                                <Text style={spendingStyles.viewMoreText}>View more</Text>
-                            </Pressable>
+                    <View style={spendingStyles.remaining}>
+                        <View>
+                            {LatestRemaining && Object.keys(LatestRemaining).length > 0 && <Text style={spendingStyles.remainingText}>Balance: {LatestRemaining.Amount} {LatestRemaining.Currency?.Name} on {dayjs(LatestRemaining.Date?._seconds * 1000).format('DD/MM/YYYY')}</Text>}
+                            {LatestBudget && Object.keys(LatestBudget).length > 0 && <Text style={spendingStyles.remainingText}>Budget: {LatestBudget.Amount} {LatestBudget.Currency?.Name} till {dayjs(LatestBudget.To?._seconds * 1000).format('DD/MM/YYYY')} </Text>}
                         </View>
                     </View>
-                    <View style={spendingStyles.contentContainer}>
-                        <View style={spendingStyles.addContainer}>
-                            {/* <View> */}
-                            <Pressable style={[spendingStyles.addButton, staticStyles.flexDirectionRow]}
-                                onPress={() => { openModal(true); setAddType('Remaining') }}>
-                                <AntDesign name="pluscircleo" color="#495057" size={24} />
-                                <Text style={[styles('#495057').textColor, { flexShrink: 1 }]}>Report remaining</Text>
-                            </Pressable>
-                            {/* </View> */}
+                    <Pressable style={spendingStyles.viewMoreButton} onPress={() => { navigation.navigate('RemainingAndBudget') }}>
+                        <Text style={spendingStyles.viewMoreText}>View more</Text>
+                    </Pressable>
+                </ScrollView>
+                <View style={spendingStyles.contentContainer}>
+                    <View style={spendingStyles.addContainer}>
+                        {/* <View> */}
+                        <Pressable style={[spendingStyles.addButton, staticStyles.flexDirectionRow]}
+                            onPress={() => { openModal(true); setAddType('Remaining') }}>
+                            <AntDesign name="pluscircleo" color="#495057" size={24} />
+                            <Text style={[styles('#495057').textColor, { flexShrink: 1 }]}>Report remaining</Text>
+                        </Pressable>
+                        {/* </View> */}
 
-                            {/* <View> */}
-                            <Pressable style={[spendingStyles.addButton, staticStyles.flexDirectionRow]}
-                                onPress={() => { openModal(true); setAddType('Spending') }}>
-                                <AntDesign name="pluscircleo" color="#495057" size={24} />
-                                <Text style={[styles('#495057').textColor, { flexShrink: 1 }]}>Add expense</Text>
-                            </Pressable>
-                            {/* </View> */}
-                            {/* <View> */}
-                            <Pressable style={[spendingStyles.addButton, staticStyles.flexDirectionRow]}
-                                onPress={() => { openModal(true); setAddType('Budget') }}>
-                                <AntDesign name="pluscircleo" color="#495057" size={24} />
-                                <Text style={[styles('#495057').textColor, { flexShrink: 1 }]}>Set budget</Text>
-                            </Pressable>
-                            {/* </View> */}
-                        </View>
+                        {/* <View> */}
+                        <Pressable style={[spendingStyles.addButton, staticStyles.flexDirectionRow]}
+                            onPress={() => { openModal(true); setAddType('Spending') }}>
+                            <AntDesign name="pluscircleo" color="#495057" size={24} />
+                            <Text style={[styles('#495057').textColor, { flexShrink: 1 }]}>Add expense</Text>
+                        </Pressable>
+                        {/* </View> */}
+                        {/* <View> */}
+                        <Pressable style={[spendingStyles.addButton, staticStyles.flexDirectionRow]}
+                            onPress={() => { openModal(true); setAddType('Budget') }}>
+                            <AntDesign name="pluscircleo" color="#495057" size={24} />
+                            <Text style={[styles('#495057').textColor, { flexShrink: 1 }]}>Set budget</Text>
+                        </Pressable>
+                        {/* </View> */}
                     </View>
-                    <CarouselComponent
-                        carouselItems={[
-                            {
-                                title: 'Item 1',
-                                text: 'Description 1',
-                                element:
-                                    <View style={{ flex: 1 }}>
-                                        <PieChartComponent pieChartData={spendingInMonthCooked}
-                                            title="Monthly spending"
-                                            currency={DefaultCurrency.Name ?? ''} />
-                                        <Pressable style={[spendingStyles.viewMoreButton, staticStyles.flexDirectionRow]}
-                                            onPress={() => { navigation.navigate('SpendingSearch') }}>
-                                            <AntDesign name="pluscircleo" color="#495057" size={24} />
-                                            <Text style={styles('#495057').textColor}>View more</Text>
-                                        </Pressable>
-                                    </View>
-                            },
-                            {
-                                title: 'Item 2',
-                                text: 'Description 2',
-                                element:
-                                    <View style={{ flex: 1 }}>
-                                        <PieChartComponent pieChartData={spendingInWeekCooked}
-                                            title="Weekly spending"
-                                            currency={DefaultCurrency.Name ?? ''} />
-                                        <Pressable style={[spendingStyles.viewMoreButton, staticStyles.flexDirectionRow]}
-                                            onPress={() => { navigation.navigate('SpendingSearch') }}>
-                                            <AntDesign name="pluscircleo" color="#495057" size={24} />
-                                            <Text style={styles('#495057').textColor}>View more</Text>
-                                        </Pressable>
-                                    </View>
-                            }
-                        ]}
-                    />
+                </View>
+                <CarouselComponent
+                    carouselItems={[
+                        {
+                            title: 'Item 1',
+                            text: 'Description 1',
+                            element:
+                                spendingInMonthCooked.length != 0 ? (<View style={{ flex: 1 }}>
+                                    <PieChartComponent pieChartData={spendingInMonthCooked}
+                                        title="Monthly spending"
+                                        currency={DefaultCurrency.Name ?? ''} />
+                                    <Pressable style={[spendingStyles.viewMoreButton, staticStyles.flexDirectionRow]}
+                                        onPress={() => { navigation.navigate('SpendingSearch') }}>
+                                        <AntDesign name="pluscircleo" color="#495057" size={24} />
+                                        <Text style={styles('#495057').textColor}>View more</Text>
+                                    </Pressable>
+                                </View>) : <></>
+                        },
+                        {
+                            title: 'Item 2',
+                            text: 'Description 2',
+                            element:
+                                spendingInWeekCooked.length != 0 ? (<View style={{ flex: 1 }}>
+                                    <PieChartComponent pieChartData={spendingInWeekCooked}
+                                        title="Weekly spending"
+                                        currency={DefaultCurrency.Name ?? ''} />
+                                    <Pressable style={[spendingStyles.viewMoreButton, staticStyles.flexDirectionRow]}
+                                        onPress={() => { navigation.navigate('SpendingSearch') }}>
+                                        <AntDesign name="pluscircleo" color="#495057" size={24} />
+                                        <Text style={styles('#495057').textColor}>View more</Text>
+                                    </Pressable>
+                                </View>) : <></>
+                        }
+                    ]}
+                />
                 {/* </ScrollView> */}
             </ScrollView>
             <Modal

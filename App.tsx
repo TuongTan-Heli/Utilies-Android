@@ -7,6 +7,7 @@ import HomeScreen from './src/screens/Home';
 import TaskHomeScreen from './src/screens/Task/Home';
 import SpendingHomeScreen from './src/screens/Spending/Home';
 import SpendingSearchScreen from './src/screens/Spending/Search';
+import RemainingAndBudgetScreen from './src/screens/Budget/Home';
 
 const Stack = createNativeStackNavigator();
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
         <Stack.Screen name="TaskHome" component={TaskHomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="SpendingHome" component={SpendingHomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="SpendingSearch" component={SpendingSearchScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="RemainingAndBudget" component={RemainingAndBudgetScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
