@@ -4,7 +4,7 @@ export const add = async (UserId: string, Name: string, Description: string, Typ
     return await api.post('/add-task', { UserId, Name, Description, Type, Deadline, EnableNoti, Priority, NotiOnDeadline , Price, CurrencyId});
 };
 
-export const update = async (TaskId: string, Name: string, Description: string, Type: string, Deadline: Date, Done: Date, EnableNoti: boolean, Priority: number, NotiOnDeadline: number, Price: number, CurrencyId: string) => {    
+export const update = async (TaskId: string, Name: string, Description: string, Type: string, Deadline: Date, Done: any, EnableNoti: boolean, Priority: number, NotiOnDeadline: number, Price: number, CurrencyId: string) => {    
     return await api.put('/update-task/' + TaskId, {Name, Description, Type, Deadline, Done, EnableNoti, Priority, NotiOnDeadline , Price, CurrencyId});
 };
 
