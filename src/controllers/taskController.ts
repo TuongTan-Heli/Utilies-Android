@@ -11,8 +11,8 @@ export const processAddTask = async (TaskName: string, Description: string, Type
     }
     return 404;
 }
-export const processUpdateTask = async (TaskId: string, TaskName: string, Description: string, Type: string, Deadline: Date, Done: any, EnableNoti: boolean, Priority: number, NotiOnDeadline: number, Price: number, Currency: string) => {
-    const response = await update(TaskId, TaskName, Description, Type, Deadline, Done?.getTime() == 0 ? null : Done, EnableNoti, Priority, NotiOnDeadline, Price, Type == "To do" ? '' : Currency);
+export const processUpdateTask = async (TaskId: string, TaskName: string, Description: string, Type: string, Deadline: Date, Done: any, EnableNoti: boolean, Priority: number, NotiOnDeadline: number, Price: number, Currency: any) => {
+    const response = await update(TaskId, TaskName, Description, Type, Deadline, Done?.getTime() == 0 ? null : Done, EnableNoti, Priority, NotiOnDeadline, Price, Currency);
     return response.status;
 }
 

@@ -32,13 +32,16 @@ export const getSpendingInWeek = async () => {
         const currentDate = new Date();
         const dayOfWeek = currentDate.getDay(); // 0 (Sun) to 6 (Sat)
 
-        // Start of the week (Sunday)
+        // Start of the week (Monday)
         const firstDayOfWeek = new Date(currentDate);
-        firstDayOfWeek.setDate(currentDate.getDate() - dayOfWeek);
+        firstDayOfWeek.setDate(currentDate.getDate() - dayOfWeek + 1);
+        firstDayOfWeek.setHours(0, 0, 0, 0);
 
-        // End of the week (Saturday)
+        // End of the week (Sunday)
         const lastDayOfWeek = new Date(currentDate);
-        lastDayOfWeek.setDate(currentDate.getDate() + (6 - dayOfWeek));
+        lastDayOfWeek.setDate(currentDate.getDate() + (6 - dayOfWeek + 1));
+        lastDayOfWeek.setHours(23, 59, 59, 999);
+        
         const response = await getSpendingInPeriod(UserId, firstDayOfWeek, lastDayOfWeek);
         return response.data;
     }

@@ -23,6 +23,7 @@ const HomeScreen = () => {
         <ImageBackground style={staticStyles.background}
             source={require('../styles/IMG_20250515_114503.png')}>
             <View style={staticStyles.backgroundOverlay}></View>
+            <View style={{ padding: 5 }}>
                 <Pressable style={staticStyles.logoutButton}
                     onPress={() => {
                         handleLogout()
@@ -30,6 +31,8 @@ const HomeScreen = () => {
                     <SimpleLineIcons name="logout" color={"red"} size={24} />
                 </Pressable>
                 <Text style={styles('white').title}>Welcome to Utilies</Text>
+            </View>
+
             <ScrollView style={homeStyles.cardContainer}
             >
                 <IconCard
@@ -55,7 +58,7 @@ const HomeScreen = () => {
                     iconColor="white"
                     cardTitle="What to eat today?"
                     backgroundColor="#775cce"
-                    directPage="TaskHome"
+                    directPage="RecipeHome"
                 />
                 <IconCard
                     IconComponent={Octicons}

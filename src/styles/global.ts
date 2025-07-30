@@ -193,7 +193,8 @@ export const styles = (color?: string) => StyleSheet.create({
     logoutButton: {
         right: 20,
         top: 20,
-        position: 'absolute'
+        position: 'absolute',
+        zIndex: 1
     },
     modalOverlay: {
         flex: 1,

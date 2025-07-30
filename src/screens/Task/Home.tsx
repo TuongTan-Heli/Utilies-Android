@@ -87,10 +87,10 @@ const TaskHomeScreen = () => {
     const isValid = validateFields(task);
     if (isValid) {
       if (task) {
-        status = await processUpdateTask(task.id, task.Name, task.Description, task.Type, task.Deadline, task.Done, task.EnableNoti, task.Priority, task.NotiOnDeadline, task.Price, task.Currency);
+        status = await processUpdateTask(task.id, task.Name, task.Description, task.Type, task.Deadline, task.Done, task.EnableNoti, task.Priority, task.NotiOnDeadline, task.Price, task.Type == "To do" ? '' : task.Currency.id);
       }
       else {
-        status = await processUpdateTask(TaskId, TaskName, Description, Type, Deadline, Done, EnableNoti, Priority, NotiOnDeadline, Price, Currency);
+        status = await processUpdateTask(TaskId, TaskName, Description, Type, Deadline, Done, EnableNoti, Priority, NotiOnDeadline, Price, Type == "To do" ? '' : Currency);
       }
 
       if (status == 200) {

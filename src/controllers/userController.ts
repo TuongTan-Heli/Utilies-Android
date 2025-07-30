@@ -3,6 +3,7 @@ import { login, register } from "../api/authApi"
 import { ToastAndroid } from "react-native";
 
 export const processLoginRequest = async (UserName: string, Password: string, sessionToken: string) => {
+    ToastAndroid.show("Logging in with token" + sessionToken, ToastAndroid.SHORT);
     const response = await login(UserName, Password, sessionToken || '');
     if (response.status == 200) {
         const data = response.data;
@@ -14,6 +15,8 @@ export const processLoginRequest = async (UserName: string, Password: string, se
         ToastAndroid.show('Login successfull', ToastAndroid.SHORT);
     }
     else {
+        ToastAndroid.show('Login failed ' + response.status, ToastAndroid.SHORT);
+
         removeToken('API_KEY');
         removeToken('SESSION_TOKEN');
         removeToken('userInfo');

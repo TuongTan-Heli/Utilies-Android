@@ -32,7 +32,9 @@ api.interceptors.response.use(
         ToastAndroid.show(error.response.data, ToastAndroid.SHORT);
         break;
       default:
-        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+        ToastAndroid.show('Something went wrong'
+          + 'with' + error.response.request.responseURL
+          , ToastAndroid.SHORT);
         return error.response?.status
     }
   }

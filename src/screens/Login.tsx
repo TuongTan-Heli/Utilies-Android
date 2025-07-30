@@ -29,7 +29,7 @@ const LoginScreen = () => {
 
     const handleLogin = async () => {
         const isValid = validateFields();
-        if (isValid || !validator.isEmpty(sessionToken || '')) {
+        if (isValid) {
             const loginStatus = await processLoginRequest(UserName, Password, sessionToken || '');
             if (loginStatus == 200) { //handle different status message to popup for user
                 const currencies = (await getAll()).data;
@@ -41,6 +41,10 @@ const LoginScreen = () => {
     }
 
     const validateFields = () => {
+        if (!validator.isEmpty(sessionToken || '')) {
+            return true;
+        }
+
         if (validator.isEmpty(UserName) || validator.isEmpty(Password)) {
             setValidateMessage('* Please fill in enough field');
             return false;
