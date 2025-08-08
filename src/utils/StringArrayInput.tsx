@@ -4,7 +4,7 @@ import { styles } from '../styles/global';
 import { taskStyles } from '../styles/task';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
-const StringArrayInput = ({ texts, setTexts }: { texts: any, setTexts: any }) => {
+const StringArrayInput = ({ texts, setTexts, placeholder }: { texts: any, setTexts: any, placeholder: string }) => {
     const staticStyles = styles();
 
     const handleChange = (text: string, index: number) => {
@@ -24,12 +24,13 @@ const StringArrayInput = ({ texts, setTexts }: { texts: any, setTexts: any }) =>
     };
 
     return (
-        <ScrollView>
+        <View>
             {texts.map((value, index) => (
                 <View key={index} style={rowStyles.inputRow}>
                     <TextInput
+                        placeholderTextColor="#888"
                         style={staticStyles.input1}
-                        placeholder='Enter ingredient'
+                        placeholder={placeholder}
                         value={value}
                         onChangeText={(text) => handleChange(text, index)}
                     />
@@ -46,9 +47,8 @@ const StringArrayInput = ({ texts, setTexts }: { texts: any, setTexts: any }) =>
                 </View>
             ))}
 
-            <Button title="Add Text" onPress={addInput} />
-            <Text>Texts: {JSON.stringify(texts)}</Text>
-        </ScrollView>
+            <Button title="Add Ingredient" onPress={addInput} />
+        </View>
     );
 }
 
