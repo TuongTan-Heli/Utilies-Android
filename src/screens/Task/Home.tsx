@@ -267,6 +267,7 @@ const TaskHomeScreen = () => {
               <AntDesign name="close" color="#787878" size={24} />
             </Pressable>
             <View style={staticStyles.modalContentContainer}>
+              <View style={{width: '100%'}}></View>
               <Text style={styles('black').title}>{isEditTask ? "Update task" : "Add new task"}</Text>
               <TextInput
                 value={TaskName}

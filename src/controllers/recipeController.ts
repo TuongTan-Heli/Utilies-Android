@@ -3,7 +3,11 @@ import { Step } from "../models/Step";
 import { getToken } from "../utils/EncStorage";
 
 export const search = async (key: string) => {
-    return await searchRecipe(key);
+    const UserId = JSON.parse(await getToken('userInfo') || '').id;
+    if (UserId) {
+        return await searchRecipe(key, UserId);
+    }
+    return 404;
 }
 
 export const processAddRecipe = async (Name: string, Description: string, Ingredients: string[], Steps: Step[], Image: null) => {

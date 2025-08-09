@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
 import { Step, defaultStep } from "../models/Step";
 import StringArrayInput from "./StringArrayInput";
 import { styles } from '../styles/global';
@@ -84,9 +84,12 @@ export default StepArrayInput;
 const stepStyles = StyleSheet.create({
     container: {
         padding: 10,
-        backgroundColor: 'blue'
+        // backgroundColor: 'blue',
+        marginBottom: 8,
+        marginTop: 8
     },
     stepContainer: {
+        gap: 8,
         marginBottom: 15,
         padding: 10,
         backgroundColor: "#f2f2f2",

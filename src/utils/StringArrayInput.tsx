@@ -29,7 +29,7 @@ const StringArrayInput = ({ texts, setTexts, placeholder }: { texts: any, setTex
                 <View key={index} style={rowStyles.inputRow}>
                     <TextInput
                         placeholderTextColor="#888"
-                        style={staticStyles.input1}
+                        style={[staticStyles.input1, { width: '80%', marginBottom: 0 }]}
                         placeholder={placeholder}
                         value={value}
                         onChangeText={(text) => handleChange(text, index)}
@@ -37,7 +37,7 @@ const StringArrayInput = ({ texts, setTexts, placeholder }: { texts: any, setTex
                     {index !== 0 && (
                         // <Button title="Remove" color="red" onPress={() => removeInput(index)} />
 
-                        <Pressable style={taskStyles.deleteButton}
+                        <Pressable style={[taskStyles.deleteButton, { width: '20%' }]}
                             onPress={() => {
                                 removeInput(index)
                             }}>
@@ -54,18 +54,13 @@ const StringArrayInput = ({ texts, setTexts, placeholder }: { texts: any, setTex
 
 const rowStyles = StyleSheet.create({
     inputRow: {
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
+        // flex: 1,
+        gap: 8,
         marginBottom: 10,
-    },
-    input: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 8,
-        marginRight: 8,
-        borderRadius: 4,
-    },
+    }
 });
 
 export default StringArrayInput;
