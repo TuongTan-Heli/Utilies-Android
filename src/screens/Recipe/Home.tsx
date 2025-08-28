@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, SafeAreaView, ScrollView, TextInput, View } from 'react-native';
 import { styles } from '../../styles/global';
-import { processAddRecipe, search } from "../../controllers/recipeController";
+import { processAddRecipe, processGetAllRecipe, search } from "../../controllers/recipeController";
 import { Button, Text } from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import StringArrayInput from '../../utils/StringArrayInput';
@@ -9,8 +9,13 @@ import { Step, defaultStep } from '../../models/Step';
 import StepArrayInput from '../../utils/StepArrayInput';
 import { styles as recipeStyles } from '../../styles/Recipe';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getAllRecipe } from '../../api/recipeApi';
+import { useNavigation } from '@react-navigation/native';
+import RecipeInfoScreen from './RecipeInfo';
+
 
 const RecipeHomeScreen = () => {
+    const navigation = useNavigation<any>();
     const [searchKey, setSearchKey] = useState('');
     const [recipes, setRecipes] = useState<any[]>([]);
     const [name, setName] = useState('');
@@ -20,19 +25,25 @@ const RecipeHomeScreen = () => {
     const [isAddingRecipe, setIsAddingRecipe] = useState(false);
 
     useEffect(() => {
+        fetch();
+    }, [])
+
+    useEffect(() => {
         setName('');
         setDescription('');
         setIngredients(['']);
         setSteps([]);
     }, [isAddingRecipe])
     const fetch = async () => {
-
+        const response = await processGetAllRecipe();
+        if (response?.status == 200) {
+            setRecipes(response.data);
+        }
     }
     const handleSearch = async () => {
         const result = await search(searchKey);
         if (result) {
             setRecipes(result.data);
-            console.log(result.data);
         }
     }
     const handleAddRecipe = async () => {
@@ -66,7 +77,9 @@ const RecipeHomeScreen = () => {
                             {
                                 recipes.map(recipe => {
                                     return (
-                                        <View style={recipeStyles.recipeCard} key={recipe.objectID}>
+                                        <Pressable style={recipeStyles.recipeCard} key={recipe.objectID} onPress={() => {
+                                            navigation.navigate('RecipeInfo', { recipeId: recipe.objectID })
+                                        }}>
                                             <Text h3>{recipe.Name}</Text>
                                             <Text h4>{recipe.Description}</Text>
                                             <View style={recipeStyles.ingredientInfoContainer}>
@@ -76,11 +89,11 @@ const RecipeHomeScreen = () => {
 
                                                 {recipe.Ingredients.map(ingredient => {
                                                     return (
-                                                        <Text style={[recipeStyles.ingredient, { fontSize: 16 }]}>{ingredient}</Text>
+                                                        <Text key={ingredient} style={[recipeStyles.ingredient, { fontSize: 16 }]}>{ingredient}</Text>
                                                     )
                                                 })}
                                             </View>
-                                        </View>
+                                        </Pressable>
                                     )
                                 })
                             }
@@ -95,37 +108,37 @@ const RecipeHomeScreen = () => {
                         <View style={recipeStyles.addOverlay}>
                             <ScrollView style={recipeStyles.addContainer}>
                                 {/* <View style={recipeStyles.addContentContainer}> */}
-                                    <Pressable style={[staticStyles.iconSmall, staticStyles.iconClose, { top: 0, right: 0 }]}
-                                        onPress={() => setIsAddingRecipe(false)}>
-                                        <AntDesign name="close" color="#787878" size={24} />
-                                    </Pressable>
-                                    <View style={recipeStyles.addContentContainer}>
-                                        <Text style={styles().title}>Add new recipe</Text>
-                                        <TextInput
-                                            value={name}
-                                            placeholder='Recipe name'
-                                            onChangeText={setName}
-                                            placeholderTextColor="#888"
-                                            style={staticStyles.input1}></TextInput>
-                                        <TextInput
-                                            value={description}
-                                            placeholder='Description'
-                                            onChangeText={setDescription}
-                                            placeholderTextColor="#888"
-                                            style={staticStyles.input1}></TextInput>
-                                        <StringArrayInput
-                                            texts={ingredients}
-                                            setTexts={setIngredients}
-                                            placeholder='Ingredient'
-                                        ></StringArrayInput>
-                                        <StepArrayInput
-                                            value={steps}
-                                            onChange={setSteps}
-                                        ></StepArrayInput>
-                                        <Button title="Add new recipe" style={[staticStyles.button]}
-                                            onPress={() => { handleAddRecipe() }}>
-                                        </Button>
-                                    </View>
+                                <Pressable style={[staticStyles.iconSmall, staticStyles.iconClose, { top: 0, right: 0 }]}
+                                    onPress={() => setIsAddingRecipe(false)}>
+                                    <AntDesign name="close" color="#787878" size={24} />
+                                </Pressable>
+                                <View style={recipeStyles.addContentContainer}>
+                                    <Text style={styles().title}>Add new recipe</Text>
+                                    <TextInput
+                                        value={name}
+                                        placeholder='Recipe name'
+                                        onChangeText={setName}
+                                        placeholderTextColor="#888"
+                                        style={staticStyles.input1}></TextInput>
+                                    <TextInput
+                                        value={description}
+                                        placeholder='Description'
+                                        onChangeText={setDescription}
+                                        placeholderTextColor="#888"
+                                        style={staticStyles.input1}></TextInput>
+                                    <StringArrayInput
+                                        texts={ingredients}
+                                        setTexts={setIngredients}
+                                        placeholder='Ingredient'
+                                    ></StringArrayInput>
+                                    <StepArrayInput
+                                        value={steps}
+                                        onChange={setSteps}
+                                    ></StepArrayInput>
+                                    <Button title="Add new recipe" style={[staticStyles.button]}
+                                        onPress={() => { handleAddRecipe() }}>
+                                    </Button>
+                                </View>
 
                                 {/* </View> */}
 

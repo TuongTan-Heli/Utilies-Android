@@ -26,6 +26,10 @@ const StepArrayInput: React.FC<StepArrayInputProps> = ({ value, onChange }) => {
         setSteps(updated);
         onChange?.(updated);
     };
+    useEffect(() => {
+        setSteps(value ?? [defaultStep]);
+    }, [value]);
+
 
     // Add a new empty step
     const addStep = () => {
@@ -60,7 +64,7 @@ const StepArrayInput: React.FC<StepArrayInputProps> = ({ value, onChange }) => {
                         setTexts={(ingredients: string[]) => { updateStep(index, "Ingredients", ingredients) }}
                     >
                     </StringArrayInput>
-                    
+
                     <TextInput
                         placeholderTextColor="#888"
                         style={staticStyles.input1}

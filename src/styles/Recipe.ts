@@ -21,9 +21,10 @@ export const styles = StyleSheet.create({
     recipeCard: {
         marginTop: 8,
         padding: 8,
-        backgroundColor: 'white',
+        backgroundColor: '#ececec',
         borderRadius: 8,
-        alignItems: 'center'
+        alignItems: 'center',
+        
     },
     ingredientInfoContainer: {
         flexDirection: 'row',

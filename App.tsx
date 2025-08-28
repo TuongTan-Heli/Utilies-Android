@@ -9,8 +9,21 @@ import SpendingHomeScreen from './src/screens/Spending/Home';
 import SpendingSearchScreen from './src/screens/Spending/Search';
 import RemainingAndBudgetScreen from './src/screens/Budget/Home';
 import RecipeHomeScreen from './src/screens/Recipe/Home';
+import RecipeInfoScreen from './src/screens/Recipe/RecipeInfo';
+// const Stack = createNativeStackNavigator<RootStackParamList>();
+type RootStackParamList = {
+  Login: undefined,
+  Register: undefined,
+  Home: undefined,
+  TaskHome: undefined,
+  SpendingHome: undefined,
+  SpendingSearch: undefined,
+  RemainingAndBudget: undefined,
+  RecipeHome: undefined,
+  RecipeInfo: { recipeId: string };
+};
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const App = () => {
   return (
     <NavigationContainer>
@@ -23,6 +36,7 @@ const App = () => {
         <Stack.Screen name="SpendingSearch" component={SpendingSearchScreen} options={{ headerShown: false }} />
         <Stack.Screen name="RemainingAndBudget" component={RemainingAndBudgetScreen} options={{ headerShown: false }} />
         <Stack.Screen name="RecipeHome" component={RecipeHomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="RecipeInfo" component={RecipeInfoScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
