@@ -14,6 +14,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import validator from 'validator';
 import { getToken } from '../../utils/EncStorage';
 import { getUserDefaultCurrency } from '../../utils/utils';
+import LoadingBackground from '../../utils/LoadingBackground';
 
 
 const TaskHomeScreen = () => {
@@ -37,26 +38,51 @@ const TaskHomeScreen = () => {
   const [ValidateMessage, setValidateMessage] = useState('');
   const [DefaultCurrency, setDefaultCurrency] = useState<any>({});
 
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     fetch();
   }, [])
   const fetch = async () => {
-    const Task = (await getUserTask()).data;
-    Task.forEach(task => {
-      if (task.Deadline) {
-        task.Deadline = new Date(task.Deadline._seconds * 1000)
-      }
-      if (task.Done) {
-        task.Done = new Date(task.Done._seconds * 1000)
-      }
-    });
-    setToDoTask(Task.filter((x: any) => x.Type == 'To do'));
-    setDefaultCurrency(await getUserDefaultCurrency());
-    setToBuyTask(Task.filter((x: any) => x.Type == 'To buy'));
-    const allCurencies = await getToken('ALL_CURRENCIES');
-    setCurrencies(JSON.parse(allCurencies ?? ''));
-    console.log(Task)
+    setLoading(true);
+
+    try {
+      // Run requests in parallel
+      const [taskRes, defaultCurrency, allCurrenciesStr] = await Promise.all([
+        getUserTask().catch(() => ({ data: [] })),
+        getUserDefaultCurrency().catch(() => null),
+        getToken('ALL_CURRENCIES').catch(() => null),
+      ]);
+
+      const tasks = (taskRes?.data || []).map((task: any) => ({
+        ...task,
+        Deadline: task.Deadline ? new Date(task.Deadline._seconds * 1000) : null,
+        Done: task.Done ? new Date(task.Done._seconds * 1000) : null,
+      }));
+
+      const toDo = tasks.filter((t: any) => t.Type === 'To do');
+      const toBuy = tasks.filter((t: any) => t.Type === 'To buy');
+
+      const currencies = (() => {
+        try {
+          return JSON.parse(allCurrenciesStr ?? '[]');
+        } catch {
+          console.warn("Failed to parse ALL_CURRENCIES");
+          return [];
+        }
+      })();
+
+      setToDoTask(toDo);
+      setToBuyTask(toBuy);
+      setDefaultCurrency(defaultCurrency ?? '');
+      setCurrencies(currencies);
+
+    } catch (err) {
+      console.warn("Error loading task data:", err);
+    } finally {
+      setLoading(false);
+    }
   }
+
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     setDeadline(currentDate);
@@ -179,6 +205,7 @@ const TaskHomeScreen = () => {
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <LoadingBackground visible={loading}></LoadingBackground>
       <View style={staticStyles.background}>
         <View style={staticStyles.thirtyLightblueBackground}>
         </View>
@@ -267,7 +294,7 @@ const TaskHomeScreen = () => {
               <AntDesign name="close" color="#787878" size={24} />
             </Pressable>
             <View style={staticStyles.modalContentContainer}>
-              <View style={{width: '100%'}}></View>
+              <View style={{ width: '100%' }}></View>
               <Text style={styles('black').title}>{isEditTask ? "Update task" : "Add new task"}</Text>
               <TextInput
                 value={TaskName}

@@ -17,6 +17,7 @@ import PieChartComponent from "../../utils/PieChart";
 import { getUserDefaultCurrency, groupBy } from "../../utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
+import LoadingBackground from "../../utils/LoadingBackground";
 
 const SpendingHomeScreen = () => {
     const staticStyles = styles();
@@ -50,36 +51,65 @@ const SpendingHomeScreen = () => {
     const [LatestBudget, setLatestBudget] = useState<any>({});
     const [LatestRemaining, setLatestRemaining] = useState<any>({});
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         fetch();
     }, [])
     const fetch = async () => {
-        const allCurencies = await getToken('ALL_CURRENCIES');
-        setCurrencies(JSON.parse(allCurencies ?? ''));
-        setDefaultCurrency(await getUserDefaultCurrency());
-        try {
-            const budgetResponse = await processGetLatestBudget();
-            if (budgetResponse?.status == "Success") {
-                setLatestBudget(budgetResponse.data);
-            }
-        }
-        catch (err) {}
+        setLoading(true);
 
         try {
-            const remainingResponse = await processGetLatestRemaining();
-            if (remainingResponse?.status == "Success") {
+            const [
+                allCurrenciesStr,
+                defaultCurrency,
+                budgetResponse,
+                remainingResponse,
+                monthSpending,
+                weekSpending
+            ] = await Promise.all([
+                getToken('ALL_CURRENCIES').catch(() => null),
+                getUserDefaultCurrency().catch(() => null),
+                processGetLatestBudget().catch(err => ({ status: "Error", message: err.message })),
+                processGetLatestRemaining().catch(err => ({ status: "Error", message: err.message })),
+                getSpendingInMonth().catch(() => ({ status: 500 })),
+                getSpendingInWeek().catch(() => ({ status: 500 })),
+            ]);
+
+            const currencies = (() => {
+                try {
+                    return JSON.parse(allCurrenciesStr ?? "[]");
+                } catch (err) {
+                    console.warn("Failed to parse currencies", err);
+                    return [];
+                }
+            })();
+
+            setCurrencies(currencies);
+            setDefaultCurrency(defaultCurrency ?? '');
+
+            if (budgetResponse?.status === "Success") {
+                setLatestBudget(budgetResponse.data);
+            }
+
+            if (remainingResponse?.status === "Success") {
                 setLatestRemaining(remainingResponse.data);
             }
-        }
-        catch (err) {}
-        //getspending in week and analyze
-        const monthSpending = await getSpendingInMonth();
-        const weekSpending = await getSpendingInWeek();
-        if (monthSpending.status = 200) {
-            setSpendingInMonth(monthSpending.data);
-        }
-        if (weekSpending.status = 200) {
-            setSpendingInWeek(weekSpending.data);
+
+            if (monthSpending?.status === "Success") {
+                setSpendingInMonth(monthSpending.data);
+            }
+
+            if (weekSpending?.status === "Success") {
+                setSpendingInWeek(weekSpending.data);
+            }
+
+        } catch (err) {
+            console.warn("Error fetching dashboard data:", err);
+        } finally {
+            setLoading(false);
+            console.log(spendingInMonth);
+            console.log(spendingInWeek);
         }
     }
     useEffect(() => {
@@ -165,6 +195,7 @@ const SpendingHomeScreen = () => {
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <LoadingBackground visible={loading}></LoadingBackground>
             <ScrollView style={staticStyles.backgroundScrollView} contentContainerStyle={{ alignItems: 'center' }}>
                 <View style={staticStyles.thirtyLightblueBackground}>
                 </View>
@@ -217,11 +248,6 @@ const SpendingHomeScreen = () => {
                                     <PieChartComponent pieChartData={spendingInMonthCooked}
                                         title="Monthly spending"
                                         currency={DefaultCurrency.Name ?? ''} />
-                                    <Pressable style={[spendingStyles.viewMoreButton, staticStyles.flexDirectionRow]}
-                                        onPress={() => { navigation.navigate('SpendingSearch') }}>
-                                        <AntDesign name="pluscircleo" color="#495057" size={24} />
-                                        <Text style={styles('#495057').textColor}>View more</Text>
-                                    </Pressable>
                                 </View>) : <></>
                         },
                         {
@@ -232,16 +258,15 @@ const SpendingHomeScreen = () => {
                                     <PieChartComponent pieChartData={spendingInWeekCooked}
                                         title="Weekly spending"
                                         currency={DefaultCurrency.Name ?? ''} />
-                                    <Pressable style={[spendingStyles.viewMoreButton, staticStyles.flexDirectionRow]}
-                                        onPress={() => { navigation.navigate('SpendingSearch') }}>
-                                        <AntDesign name="pluscircleo" color="#495057" size={24} />
-                                        <Text style={styles('#495057').textColor}>View more</Text>
-                                    </Pressable>
                                 </View>) : <></>
                         }
                     ]}
                 />
-                {/* </ScrollView> */}
+                <Pressable style={[spendingStyles.viewMoreButton, staticStyles.flexDirectionRow]}
+                    onPress={() => { navigation.navigate('SpendingSearch') }}>
+                    <AntDesign name="pluscircleo" color="#495057" size={24} />
+                    <Text style={styles('#495057').textColor}>View more</Text>
+                </Pressable>
             </ScrollView>
             <Modal
                 transparent

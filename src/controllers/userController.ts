@@ -3,26 +3,26 @@ import { login, register } from "../api/authApi"
 import { ToastAndroid } from "react-native";
 
 export const processLoginRequest = async (UserName: string, Password: string, sessionToken: string) => {
-    ToastAndroid.show("Logging in with token" + sessionToken, ToastAndroid.SHORT);
+    ToastAndroid.show(sessionToken ? "Logging in with session..." : "Logging in...", ToastAndroid.SHORT);
+
     const response = await login(UserName, Password, sessionToken || '');
-    if (response.status == 200) {
-        const data = response.data;
-        saveToken('API_KEY', data.apiKey.ApiKey);
-        saveToken('SESSION_TOKEN', data.sessionToken.SessionToken);
-
-        saveToken('userInfo', JSON.stringify(data.data));
-        saveToken('logStatus', 'logged');
-        ToastAndroid.show('Login successfull', ToastAndroid.SHORT);
+    if (response.status === 200) {
+        const { data } = response;
+        await Promise.all([
+            saveToken('API_KEY', data.apiKey.ApiKey),
+            saveToken('SESSION_TOKEN', data.sessionToken.SessionToken),
+            saveToken('userInfo', JSON.stringify(data.data)),
+            saveToken('logStatus', 'logged'),
+        ]);
+    } else {
+        await Promise.all([
+            removeToken('API_KEY'),
+            removeToken('SESSION_TOKEN'),
+            removeToken('userInfo'),
+        ]);
     }
-    else {
-        ToastAndroid.show('Login failed ' + response.status, ToastAndroid.SHORT);
 
-        removeToken('API_KEY');
-        removeToken('SESSION_TOKEN');
-        removeToken('userInfo');
-    }
-
-    return response.status;
+    return response;
 }
 
 export const processRegisterRequest = async (UserName: string, Password: string, Email: string) => {

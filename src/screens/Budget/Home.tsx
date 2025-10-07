@@ -13,6 +13,7 @@ import { getUserDefaultCurrency } from '../../utils/utils';
 import { processAddBudget, processDeleteBudget, processGetAllBudget, processUpdateBudget } from '../../controllers/budgetController';
 import { processAddRemaining, processDeleteRemaining, processGetAllRemaining, processUpdateRemaining } from '../../controllers/remainingController';
 import dayjs from 'dayjs';
+import LoadingBackground from '../../utils/LoadingBackground';
 
 
 const RemainingAndBudgetScreen = () => {
@@ -33,30 +34,52 @@ const RemainingAndBudgetScreen = () => {
 
     const [ValidateMessage, setValidateMessage] = useState('');
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         fetch();
     }, [])
     const fetch = async () => {
-        try {
-            const budget = await processGetAllBudget(); // returns 404? will be caught
-            if (budget.status === "Success") {
-                setBudget(budget.data);
-            }
-        } catch (err) {
-            console.warn("Budget fetch failed:", err.message);
-        }
+        setLoading(true);
 
         try {
-            const remaining = await processGetAllRemaining();
-            if (remaining.status === "Success") {
-                setRemaining(remaining.data);
+            // Run calls concurrently to reduce total wait time
+            const [budgetRes, remainingRes, defaultCurrency, allCurrenciesStr] = await Promise.all([
+                processGetAllBudget().catch(err => ({ status: "Error", message: err.message })),
+                processGetAllRemaining().catch(err => ({ status: "Error", message: err.message })),
+                getUserDefaultCurrency().catch(() => null),
+                getToken('ALL_CURRENCIES').catch(() => null),
+            ]);
+
+            // Handle budget
+            if (budgetRes.status === "Success") {
+                setBudget(budgetRes.data);
+            } else {
+                console.warn("Budget fetch failed:", budgetRes.message || budgetRes.status);
+            }
+
+            // Handle remaining
+            if (remainingRes.status === "Success") {
+                setRemaining(remainingRes.data);
+            } else {
+                console.warn("Remaining fetch failed:", remainingRes.message || remainingRes.status);
+            }
+
+            // Handle currency
+            setDefaultCurrency(defaultCurrency ?? '');
+            if (allCurrenciesStr) {
+                try {
+                    setCurrencies(JSON.parse(allCurrenciesStr));
+                } catch (parseErr) {
+                    console.warn("Failed to parse currencies:", parseErr);
+                    setCurrencies([]);
+                }
             }
         } catch (err) {
-            console.warn("Remaining fetch failed:", err.message);
+            console.warn("Unexpected error in data fetching:", err);
+        } finally {
+            setLoading(false);
         }
-        setDefaultCurrency(await getUserDefaultCurrency());
-        const allCurencies = await getToken('ALL_CURRENCIES');
-        setCurrencies(JSON.parse(allCurencies ?? ''));
     }
     const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate;
@@ -132,7 +155,9 @@ const RemainingAndBudgetScreen = () => {
         }
     }
     return (
+
         <SafeAreaView style={{ flex: 1 }}>
+            <LoadingBackground visible={loading}></LoadingBackground>
             <View style={staticStyles.background}>
                 <View style={staticStyles.thirtyLightblueBackground}>
                 </View>

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ImageBackground, SafeAreaView, Text, TextInput, ToastAndroid, View } from 'react-native';
 import { getToken, saveToken } from '../utils/EncStorage';
 import { processLoginRequest } from '../controllers/userController';
@@ -9,36 +9,61 @@ import { Button } from 'react-native-elements';
 import TypingText from '../utils/TypingText';
 import validator from 'validator';
 import { getAll } from '../controllers/currencyController';
+import LoadingBackground from '../utils/LoadingBackground';
 
 const LoginScreen = () => {
     const [UserName, setUserName] = useState('');
     const [Password, setPassword] = useState('');
     const [ValidateMessage, setValidateMessage] = useState('');
     const navigation = useNavigation<any>();
+    const [loading, setLoading] = useState(false);
 
     let sessionToken: string | null = null;
-    useEffect(() => {
-        const fetch = async () => {
+
+    const handleAutoLogin = useCallback(async () => {
+        try {
             sessionToken = await getToken('SESSION_TOKEN');
             if (sessionToken) {
                 await handleLogin();
             }
+        } catch (err) {
+            console.log('Auto login failed:', err);
         }
-        fetch();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        handleAutoLogin();
+    }, [handleAutoLogin]);
 
     const handleLogin = async () => {
-        const isValid = validateFields();
-        if (isValid) {
-            const loginStatus = await processLoginRequest(UserName, Password, sessionToken || '');
-            if (loginStatus == 200) { //handle different status message to popup for user
-                const currencies = (await getAll()).data;
-                saveToken('ALL_CURRENCIES', JSON.stringify(currencies));
-                navigation.navigate('Home');
-            }
-        }
+        if (!validateFields()) return;
 
-    }
+        setLoading(true);
+        try {
+            const response = await processLoginRequest(UserName, Password, sessionToken || '');
+
+            if (response.status === 200) {
+                // Navigate first for better UX
+                navigation.navigate('Home');
+                ToastAndroid.show('Login successful', ToastAndroid.SHORT);
+
+                // Background save / preload
+                (async () => {
+                    const existingCurrencies = await getToken('ALL_CURRENCIES');
+                    if (!existingCurrencies) {
+                        const currencies = (await getAll())?.data || [];
+                        await saveToken('ALL_CURRENCIES', JSON.stringify(currencies));
+                    }
+                })();
+            } else {
+                ToastAndroid.show(`Login failed (${response.status})`, ToastAndroid.SHORT);
+            }
+        } catch (err: any) {
+            ToastAndroid.show(`Error: ${err.message}`, ToastAndroid.SHORT);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const validateFields = () => {
         if (!validator.isEmpty(sessionToken || '')) {
@@ -84,8 +109,8 @@ const LoginScreen = () => {
                         onPress={() => { navigation.navigate('Register') }}></Button>
                 </View>
                 <Text style={[styles().orText, styles().footer]}>@{new Date().getFullYear()} Utilies</Text>
-
             </ImageBackground>
+            <LoadingBackground visible={loading}></LoadingBackground>
         </SafeAreaView>
 
     );

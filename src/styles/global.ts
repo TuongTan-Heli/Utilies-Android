@@ -7,14 +7,14 @@ export const styles = (color?: string) => StyleSheet.create({
     },
     background: {
         flex: 1,
-        zIndex:0,
+        zIndex: 0,
         alignItems: 'center',
         backgroundColor: '#f2f6fd',
         paddingTop: '5%'
     },
-     backgroundScrollView: {
+    backgroundScrollView: {
         flex: 1,
-        zIndex:0,
+        zIndex: 0,
         // alignItems: 'center',
         backgroundColor: '#f2f6fd',
         // paddingTop: '5%'
@@ -27,7 +27,7 @@ export const styles = (color?: string) => StyleSheet.create({
     thirtyLightblueBackground: {
         backgroundColor: '#99d9ea',
         width: '100%',
-        height: Dimensions.get('window').height * (3/10),
+        height: Dimensions.get('window').height * (3 / 10),
         borderBottomRightRadius: 70,
         borderBottomLeftRadius: 70,
         position: 'absolute',
