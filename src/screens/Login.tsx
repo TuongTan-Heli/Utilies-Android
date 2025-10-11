@@ -55,11 +55,9 @@ const LoginScreen = () => {
                         await saveToken('ALL_CURRENCIES', JSON.stringify(currencies));
                     }
                 })();
-            } else {
-                ToastAndroid.show(`Login failed (${response.status})`, ToastAndroid.SHORT);
-            }
+            } 
         } catch (err: any) {
-            ToastAndroid.show(`Error: ${err.message}`, ToastAndroid.SHORT);
+            ToastAndroid.show(`Error`, ToastAndroid.SHORT);
         } finally {
             setLoading(false);
         }

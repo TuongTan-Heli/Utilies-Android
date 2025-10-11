@@ -2,14 +2,11 @@
 import { styles } from "../../styles/global";
 import { spendingStyles } from "../../styles/spending";
 import { useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { Dimensions, FlatList, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
+import { FlatList, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { processDeleteSpending, processSearchSpending, processUpdateSpending } from "../../controllers/spendingController";
-import dayjs, { Dayjs } from 'dayjs';
 import { Picker } from "@react-native-picker/picker";
-import DropDownPicker from "react-native-dropdown-picker";
 import NumericInput from "react-native-numeric-input";
 import CheckBox from "@react-native-community/checkbox";
 import { Button } from "react-native-elements";

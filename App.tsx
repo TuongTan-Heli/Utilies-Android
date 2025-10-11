@@ -10,6 +10,7 @@ import SpendingSearchScreen from './src/screens/Spending/Search';
 import RemainingAndBudgetScreen from './src/screens/Budget/Home';
 import RecipeHomeScreen from './src/screens/Recipe/Home';
 import RecipeInfoScreen from './src/screens/Recipe/RecipeInfo';
+import AccountScreen from './src/screens/Account';
 // const Stack = createNativeStackNavigator<RootStackParamList>();
 type RootStackParamList = {
   Login: undefined,
@@ -21,6 +22,7 @@ type RootStackParamList = {
   RemainingAndBudget: undefined,
   RecipeHome: undefined,
   RecipeInfo: { recipeId: string };
+  Account: undefined,
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -37,6 +39,7 @@ const App = () => {
         <Stack.Screen name="RemainingAndBudget" component={RemainingAndBudgetScreen} options={{ headerShown: false }} />
         <Stack.Screen name="RecipeHome" component={RecipeHomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="RecipeInfo" component={RecipeInfoScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Account" component={AccountScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

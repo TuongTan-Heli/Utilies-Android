@@ -26,14 +26,14 @@ api.interceptors.response.use(
   error => {
     switch (error.response?.status) {
       case 401:
-        ToastAndroid.show(error.response.data, ToastAndroid.SHORT);
-        break;
+        ToastAndroid.show(error.response.data.message || 'Unknown', ToastAndroid.SHORT);
+        return error;
       case 404:
-        ToastAndroid.show(error.response.data, ToastAndroid.SHORT);
-        break;
+        ToastAndroid.show(error.response.data.message || 'Unknown', ToastAndroid.SHORT);
+        return error;
       default:
-        ToastAndroid.show('Something went wrong'
-          + 'with' + error.response.request.responseURL
+        ToastAndroid.show('Something went wrong with'
+           + error.response.request.responseURL
           , ToastAndroid.SHORT);
         return error.response?.status
     }

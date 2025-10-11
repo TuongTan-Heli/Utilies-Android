@@ -1,5 +1,5 @@
 import { getToken, removeToken, saveToken } from "../utils/EncStorage";
-import { login, register } from "../api/authApi"
+import { changePassword, login, register, updateAccount } from "../api/authApi"
 import { ToastAndroid } from "react-native";
 
 export const processLoginRequest = async (UserName: string, Password: string, sessionToken: string) => {
@@ -28,6 +28,26 @@ export const processLoginRequest = async (UserName: string, Password: string, se
 export const processRegisterRequest = async (UserName: string, Password: string, Email: string) => {
     const response = await register(UserName, Password, Email);
     return response.status;
+}
+
+export const processUpdateAccount = async (UserId: string, UserName: string, Email: string, DefaultCurrencyId: string,
+    TaskNotiMessage: string,
+    EnableUpdateNoti: boolean,
+    UpdateNotiMessage: string) => {
+    const response = await updateAccount(UserId, UserName, Email, DefaultCurrencyId,
+        TaskNotiMessage,
+        EnableUpdateNoti,
+        UpdateNotiMessage);
+
+    return response.status;
+}
+
+export const handleChangePassword = async (CurrentPassword: string, NewPassword: string) => {
+    const UserId = JSON.parse(await getToken('userInfo') || '').id;
+    if (UserId) {
+        const response = await changePassword(UserId, CurrentPassword, NewPassword);
+        return response.status;
+    }
 }
 
 export const logout = () => {

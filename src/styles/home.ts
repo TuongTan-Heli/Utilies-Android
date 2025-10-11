@@ -41,4 +41,14 @@ export const homeStyles = StyleSheet.create({
     cardPressed: {
         opacity: 1,
     },
+    accountDropdown: {
+        top: 10,
+        right: 0,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        elevation: 5,
+        padding: 10,
+        zIndex: 5,
+        gap: 8
+    },
 });

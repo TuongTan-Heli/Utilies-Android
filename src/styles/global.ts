@@ -64,6 +64,7 @@ export const styles = (color?: string) => StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         borderRadius: 8,
+        
     },
     button: {
         marginBottom: 10,
@@ -189,12 +190,11 @@ export const styles = (color?: string) => StyleSheet.create({
     flexDirectionRow: {
         flexDirection: 'row'
     },
-
-    logoutButton: {
-        right: 20,
-        top: 20,
+    accountButton: {
+        right: 40,
+        top: 40,
         position: 'absolute',
-        zIndex: 1
+        zIndex: 5,
     },
     modalOverlay: {
         flex: 1,
