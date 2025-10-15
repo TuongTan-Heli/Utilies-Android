@@ -6,6 +6,7 @@ import { FlatList, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, 
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { processDeleteSpending, processSearchSpending, processUpdateSpending } from "../../controllers/spendingController";
+import dayjs, { Dayjs } from 'dayjs';
 import { Picker } from "@react-native-picker/picker";
 import NumericInput from "react-native-numeric-input";
 import CheckBox from "@react-native-community/checkbox";
@@ -14,6 +15,7 @@ import { getToken } from "../../utils/EncStorage";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import PieChartComponent from "../../utils/PieChart";
 import { getUserDefaultCurrency, groupBy } from "../../utils/utils";
+import LoadingBackground from "../../utils/LoadingBackground";
 
 const SpendingSearchScreen = () => {
     const staticStyles = styles();
@@ -48,6 +50,7 @@ const SpendingSearchScreen = () => {
     const [SelectedDate, setSelectedDate] = useState(new Date())
 
     const [PieChartTitle, setPieChartTitle] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetch();
@@ -58,6 +61,7 @@ const SpendingSearchScreen = () => {
         setCurrencies(JSON.parse(allCurencies ?? ''));
     }
     const handleSearchSpending = async () => {
+        setLoading(true);
         if(!ToDate) {
             setToDate(dayjs.isDayjs(FromDate) ? FromDate.toDate() : FromDate)
         }
@@ -76,6 +80,7 @@ const SpendingSearchScreen = () => {
                 originalSpendings.current = response.data;
             }
         }
+        setLoading(false);
     }
     const sortSpending = (type) => {
         setSortedType(type);
@@ -243,6 +248,7 @@ const SpendingSearchScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <LoadingBackground visible={loading}></LoadingBackground>
             <View style={staticStyles.background}>
                 <ScrollView nestedScrollEnabled={true}
                     contentContainerStyle={{ alignItems: 'center' }}>
