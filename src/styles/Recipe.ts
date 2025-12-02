@@ -18,9 +18,8 @@ export const styles = StyleSheet.create({
         marginTop: 8,
         padding: 8,
         backgroundColor: '#ececec',
-        borderRadius: 8,
+        borderRadius: 10,
         alignItems: 'center',
-        
     },
     ingredientInfoContainer: {
         flexDirection: 'row',

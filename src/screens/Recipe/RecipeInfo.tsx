@@ -79,7 +79,7 @@ const RecipeInfoScreen = ({ route, navigation }: Props) => {
                                 placeholder='Ingredient'
                             ></StringArrayInput>
                             <Text h4>Steps</Text>
-                            <View>
+                            <View style={{ flex: 1 }}>
                                 <StepArrayInput
                                     value={steps}
                                     onChange={setSteps}
