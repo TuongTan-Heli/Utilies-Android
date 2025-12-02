@@ -131,10 +131,11 @@ const RecipeHomeScreen = () => {
                                         setTexts={setIngredients}
                                         placeholder='Ingredient'
                                     ></StringArrayInput>
-                                    <StepArrayInput
-                                        value={steps}
-                                        onChange={setSteps}
-                                    ></StepArrayInput>
+                                        <StepArrayInput
+                                            value={steps}
+                                            onChange={setSteps}
+                                        ></StepArrayInput>
+
                                     <Button title="Add new recipe" style={[staticStyles.button]}
                                         onPress={() => { handleAddRecipe() }}>
                                     </Button>

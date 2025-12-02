@@ -8,6 +8,7 @@ import StepArrayInput from '../../utils/StepArrayInput';
 import { styles as recipeStyles } from '../../styles/Recipe';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { processDeleteRecipe, processGetRecipe, processUpdateRecipe } from '../../controllers/recipeController';
+import LoadingBackground from '../../utils/LoadingBackground';
 
 type RootStackParamList = {
     RecipeInfo: { recipeId: string };
@@ -20,6 +21,7 @@ const RecipeInfoScreen = ({ route, navigation }: Props) => {
     const [ingredients, setIngredients] = useState(['']);
     const [steps, setSteps] = useState<Step[]>([]);
     const { recipeId } = route.params;
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         fetch();
     }, [])
@@ -36,55 +38,62 @@ const RecipeInfoScreen = ({ route, navigation }: Props) => {
     }
 
     const handleUpdateRecipe = async () => {
+        setLoading(true);
         const status = await processUpdateRecipe(recipeId, name, description, ingredients, steps, null);
+        setLoading(false);
     }
     const handleDeleteRecipe = async () => {
+        setLoading(true);
         const response = await processDeleteRecipe(recipeId);
         if (response == 200) {
             navigation.goBack();
         }
+        setLoading(false);
     }
 
     const staticStyles = styles();
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <LoadingBackground visible={loading}></LoadingBackground>
             <View style={staticStyles.background}>
                 <ScrollView style={recipeStyles.scrollviewContainer}>
                     <View style={recipeStyles.searchContainer}>
-                        <View style={recipeStyles.recipeContainer}>
-                            <View style={recipeStyles.recipeCard}>
-                                <TextInput
-                                    value={name}
-                                    placeholder='Recipe name'
-                                    onChangeText={setName}
-                                    placeholderTextColor="#888"
-                                    style={staticStyles.input1}></TextInput>
-                                <TextInput
-                                    value={description}
-                                    placeholder='Description'
-                                    onChangeText={setDescription}
-                                    placeholderTextColor="#888"
-                                    style={staticStyles.input1}></TextInput>
-                                <Text h4>Ingredients</Text>
-                                <StringArrayInput
-                                    texts={ingredients}
-                                    setTexts={setIngredients}
-                                    placeholder='Ingredient'
-                                ></StringArrayInput>
-                                <Text h4>Steps</Text>
+                        <View style={recipeStyles.recipeCard}>
+                            <TextInput
+                                value={name}
+                                placeholder='Recipe name'
+                                onChangeText={setName}
+                                placeholderTextColor="#888"
+                                style={staticStyles.input1}></TextInput>
+                            <TextInput
+                                value={description}
+                                placeholder='Description'
+                                onChangeText={setDescription}
+                                placeholderTextColor="#888"
+                                style={staticStyles.input1}></TextInput>
+                            <Text h4>Ingredients</Text>
+                            <StringArrayInput
+                                texts={ingredients}
+                                setTexts={setIngredients}
+                                placeholder='Ingredient'
+                            ></StringArrayInput>
+                            <Text h4>Steps</Text>
+                            <View>
                                 <StepArrayInput
                                     value={steps}
                                     onChange={setSteps}
                                 ></StepArrayInput>
-                                <View style={[staticStyles.flexDirectionRow, {gap: 10}]}>
-                                    <Button title="Update recipe" style={[staticStyles.button]}
-                                        onPress={() => { handleUpdateRecipe() }}>
-                                    </Button>
-                                    <Button title="Delete recipe" style={[staticStyles.button]} buttonStyle={{ backgroundColor: '#f32121ff' }}
-                                        onPress={() => { handleDeleteRecipe() }}>
-                                    </Button>
-                                </View>
+
+                            </View>
+
+                            <View style={[staticStyles.flexDirectionRow, { gap: 10 }]}>
+                                <Button title="Update recipe" style={[staticStyles.button]}
+                                    onPress={() => { handleUpdateRecipe() }}>
+                                </Button>
+                                <Button title="Delete recipe" style={[staticStyles.button]} buttonStyle={{ backgroundColor: '#f32121ff' }}
+                                    onPress={() => { handleDeleteRecipe() }}>
+                                </Button>
                             </View>
                         </View>
                     </View>

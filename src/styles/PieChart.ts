@@ -16,7 +16,6 @@ export const styles = StyleSheet.create({
     textAlign:'center',
     width:'100%',
     padding:8,
-    minHeight: 200
   }, 
   summaryLabel: {
     fontWeight: 'bold',

@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { SearchBar } from "react-native-screens";
 export const styles = StyleSheet.create({
     searchContainer: {
         padding: 12
@@ -14,9 +13,6 @@ export const styles = StyleSheet.create({
     },
     scrollviewContainer: {
         width: '100%',
-    },
-    recipeContainer: {
-
     },
     recipeCard: {
         marginTop: 8,
@@ -38,13 +34,12 @@ export const styles = StyleSheet.create({
         width: '50%'
     },
     addContainer: {
-        width: '90%',
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 10,
     },
     addContentContainer: {
-        paddingBottom: 40
+        paddingBottom: 40,
     },
     addOverlay: {
         flex: 1,

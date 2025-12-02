@@ -12,7 +12,7 @@ import { StyleSheet } from "react-native";
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 4,
         elevation: 5,
-        flex: 1
+        // flex: 1
     },
     title: {
         fontSize: 18,

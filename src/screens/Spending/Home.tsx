@@ -48,7 +48,7 @@ const SpendingHomeScreen = () => {
     const [spendingInMonthCooked, setSpendingInMonthCooked] = useState<Record<string, any>>({});
     const [spendingInWeekCooked, setSpendingInWeekCooked] = useState<Record<string, any>>({});
 
-    const [LatestBudget, setLatestBudget] = useState<any>({});
+    const [LatestBudget, setLatestBudget] = useState<any>();
     const [LatestRemaining, setLatestRemaining] = useState<any>({});
 
     const [loading, setLoading] = useState(false);
@@ -108,8 +108,7 @@ const SpendingHomeScreen = () => {
             console.warn("Error fetching dashboard data:", err);
         } finally {
             setLoading(false);
-            console.log(spendingInMonth);
-            console.log(spendingInWeek);
+            console.log(LatestBudget);
         }
     }
     useEffect(() => {
@@ -193,6 +192,10 @@ const SpendingHomeScreen = () => {
         setCustomType('');
         setValidateMessage('');
     }
+
+    const formatDate = (timestamp?: any) =>
+        timestamp?._seconds ? dayjs(timestamp._seconds * 1000).format("DD/MM/YYYY") : "—";
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <LoadingBackground visible={loading}></LoadingBackground>
@@ -204,8 +207,18 @@ const SpendingHomeScreen = () => {
 
                     <View style={spendingStyles.remaining}>
                         <View>
-                            {LatestRemaining && Object.keys(LatestRemaining).length > 0 && <Text style={spendingStyles.remainingText}>Balance: {LatestRemaining.Amount} {LatestRemaining.Currency?.Name} on {dayjs(LatestRemaining.Date?._seconds * 1000).format('DD/MM/YYYY')}</Text>}
-                            {LatestBudget && Object.keys(LatestBudget).length > 0 && <Text style={spendingStyles.remainingText}>Budget: {LatestBudget.Amount} {LatestBudget.Currency?.Name} till {dayjs(LatestBudget.To?._seconds * 1000).format('DD/MM/YYYY')} </Text>}
+                            {LatestRemaining !== 'No remaining found' && (
+                                <Text style={spendingStyles.remainingText}>
+                                    Balance: {LatestRemaining.Amount} {LatestRemaining.Currency?.Name} on {formatDate(LatestRemaining.Date)}
+                                </Text>
+                            )}
+
+                            {LatestBudget !== 'No upcoming budget' && (
+                                <Text style={spendingStyles.remainingText}>
+                                    Budget: {LatestBudget?.Amount} {LatestBudget?.Currency?.Name} till {formatDate(LatestBudget?.To)}
+                                </Text>
+                            )}
+
                         </View>
                     </View>
                     <Pressable style={spendingStyles.viewMoreButton} onPress={() => { navigation.navigate('RemainingAndBudget') }}>

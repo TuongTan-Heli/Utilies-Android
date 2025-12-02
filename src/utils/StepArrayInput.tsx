@@ -3,21 +3,17 @@ import { View, Text, TextInput, Button, StyleSheet, ScrollView } from "react-nat
 import { Step, defaultStep } from "../models/Step";
 import StringArrayInput from "./StringArrayInput";
 import { styles } from '../styles/global';
+import CarouselComponent from "./Carousel";
 
 
 interface StepArrayInputProps {
-    value?: Step[]; // initial value from parent (optional)
-    onChange?: (steps: Step[]) => void; // callback to send updated steps back to parent
+    value?: Step[];
+    onChange?: (steps: Step[]) => void;
 }
 
 const StepArrayInput: React.FC<StepArrayInputProps> = ({ value, onChange }) => {
-    // const [ingredients, setIngredients] = useState(['']);
     const staticStyles = styles();
     const [steps, setSteps] = useState<Step[]>(value ?? [defaultStep]);
-
-    // useEffect(() => {
-    //        console.log(ingredients);
-    //     }, [ingredients])
 
     // Handle change in a specific step property
     const updateStep = (index: number, key: keyof Step, val: any) => {
@@ -47,39 +43,45 @@ const StepArrayInput: React.FC<StepArrayInputProps> = ({ value, onChange }) => {
     };
 
     return (
-        <View style={stepStyles.container}>
-            {steps.map((step, index) => (
-                <View key={index} style={stepStyles.stepContainer}>
-                    <Text style={stepStyles.label}>Step {index + 1}</Text>
-                    <TextInput
-                        placeholderTextColor="#888"
-                        style={staticStyles.input1}
-                        placeholder="Enter what to do here"
-                        value={step.Action}
-                        onChangeText={(text) => updateStep(index, "Action", text)}
-                    />
-                    <StringArrayInput
-                        placeholder="Enter ingredient"
-                        texts={step.Ingredients}
-                        setTexts={(ingredients: string[]) => { updateStep(index, "Ingredients", ingredients) }}
-                    >
-                    </StringArrayInput>
+        <ScrollView style={stepStyles.container} contentContainerStyle={{ alignItems: 'center' }}>
+            <CarouselComponent
+                carouselItems={steps.map((step, index) => ({
+                    text: step.Action,
+                    title: `Step ${index + 1}`,
+                    element: (
+                        <View key={index} style={stepStyles.stepContainer}>
+                            <Text>Step {index + 1}</Text>
+                            <TextInput
+                                placeholderTextColor="#888"
+                                style={staticStyles.input1}
+                                placeholder="Enter what to do here"
+                                value={step.Action}
+                                onChangeText={(text) => updateStep(index, "Action", text)}
+                            />
+                            <StringArrayInput
+                                placeholder="Enter ingredient"
+                                texts={step.Ingredients}
+                                setTexts={(ingredients: string[]) => { updateStep(index, "Ingredients", ingredients) }}
+                            >
+                            </StringArrayInput>
 
-                    <TextInput
-                        placeholderTextColor="#888"
-                        style={staticStyles.input1}
-                        placeholder="Note"
-                        value={step.Note}
-                        onChangeText={(text) => updateStep(index, "Note", text)}
-                    />
-                    {steps.length > 1 && (
-                        <Button title="Remove" onPress={() => removeStep(index)} />
-                    )}
-                </View>
-            ))}
+                            <TextInput
+                                placeholderTextColor="#888"
+                                style={staticStyles.input1}
+                                placeholder="Note"
+                                value={step.Note}
+                                onChangeText={(text) => updateStep(index, "Note", text)}
+                            />
+                            {steps.length > 1 && (
+                                <Button title="Remove" onPress={() => removeStep(index)} />
+                            )}
+                        </View>
+                    ),
+                }))}
+            />
 
             <Button title="Add Step" onPress={addStep} />
-        </View>
+        </ScrollView>
     );
 };
 
@@ -87,27 +89,17 @@ export default StepArrayInput;
 
 const stepStyles = StyleSheet.create({
     container: {
-        padding: 10,
-        // backgroundColor: 'blue',
         marginBottom: 8,
         marginTop: 8
     },
     stepContainer: {
         gap: 8,
-        marginBottom: 15,
-        padding: 10,
-        backgroundColor: "#f2f2f2",
-        borderRadius: 8,
+        padding: 24,
+        backgroundColor: "#d4cfcfff",
+        borderRadius: 10,
     },
-    // label: {
-    //     fontWeight: "bold",
-    //     marginBottom: 5,
-    // },
-    // input: {
-    //     borderWidth: 1,
-    //     borderColor: "#ccc",
-    //     padding: 8,
-    //     marginBottom: 5,
-    //     borderRadius: 4,
-    // },
+    label: {
+        fontWeight: "bold",
+        marginBottom: 5,
+    },
 });
