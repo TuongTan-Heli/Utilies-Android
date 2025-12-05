@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './src/screens/Login';
@@ -11,7 +11,8 @@ import RemainingAndBudgetScreen from './src/screens/Budget/Home';
 import RecipeHomeScreen from './src/screens/Recipe/Home';
 import RecipeInfoScreen from './src/screens/Recipe/RecipeInfo';
 import AccountScreen from './src/screens/Account';
-// const Stack = createNativeStackNavigator<RootStackParamList>();
+// import { NativeModules } from 'react-native';
+// const { WidgetModule } = NativeModules || {};
 type RootStackParamList = {
   Login: undefined,
   Register: undefined,
@@ -27,6 +28,7 @@ type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const App = () => {
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">

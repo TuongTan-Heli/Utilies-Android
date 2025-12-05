@@ -1,16 +1,17 @@
-import EncryptedStorage from 'react-native-encrypted-storage';
+import { NativeModules } from 'react-native';
 
+const { SecureStorage } = NativeModules;
 // Save session token
 export const saveToken = async (name: string, token: string) => {
-  await EncryptedStorage.setItem(name, token);
+  await SecureStorage.setItem(name, token);
 };
 
 // Retrieve session token
 export const getToken = async (name: string) => {
-  return await EncryptedStorage.getItem(name);
+  return await SecureStorage.getItem(name);
 };
 
 // Remove session token
 export const removeToken = async (name: string) => {
-  await EncryptedStorage.removeItem(name);
+  await SecureStorage.removeItem(name);
 };

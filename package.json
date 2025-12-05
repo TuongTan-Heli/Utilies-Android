@@ -22,7 +22,6 @@
     "react-native-chart-kit": "^6.12.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-elements": "^3.4.3",
-    "react-native-encrypted-storage": "^4.0.3",
     "react-native-numeric-input": "^1.9.1",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "^4.10.0",
