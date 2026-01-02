@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.facebook.react.bridge.*
+import androidx.core.content.edit
 
 class SecureStorageModule(private val reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
@@ -28,7 +29,7 @@ class SecureStorageModule(private val reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun setItem(key: String, value: String, promise: Promise) {
-        prefs.edit().putString(key, value).apply()
+        prefs.edit { putString(key, value) }
         promise.resolve(true)
     }
 
@@ -40,7 +41,7 @@ class SecureStorageModule(private val reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun removeItem(key: String, promise: Promise) {
-        prefs.edit().remove(key).apply()
+        prefs.edit { remove(key) }
         promise.resolve(true)
     }
 }

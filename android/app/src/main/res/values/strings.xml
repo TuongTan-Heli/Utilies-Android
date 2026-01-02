@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Utilies</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="to_do">To do</string>
+    <string name="to_buy">To buy</string>
+    <string name="expense">Expense</string>
 </resources>
