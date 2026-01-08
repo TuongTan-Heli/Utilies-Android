@@ -1,7 +1,9 @@
 package com.utilies
 
-import android.util.Log
 import org.json.JSONArray
+import java.text.SimpleDateFormat
+import java.util.Locale
+
 
 object WidgetMapper {
     fun fromApi(dataArray: JSONArray): List<Pair<WidgetTab, MutableList<DataItem>>> {
@@ -32,18 +34,28 @@ object WidgetMapper {
                     title = o.getString("Name"),
                     done = done
                 )
+
                 WidgetTab.TOBUY -> DataItem(
                     id = o.getString("id"),
                     title = o.getString("Name"),
                     price = o.optDouble("Price", 0.0),
                     done = done
                 )
-                WidgetTab.EXPENSE -> DataItem(
-                    id = o.getString("id"),
-                    price = o.optDouble("Price", 0.0),
-                    type = o.optString("Type"),
-                    date = o.optString("Date")
-                )
+
+                WidgetTab.EXPENSE -> {
+
+                    val date = o.optJSONObject("Date").optLong("_seconds") * 1000
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val dateStr = dateFormat.format(date)
+
+                    DataItem(
+                        id = o.getString("id"),
+                        price = o.optDouble("Amount", 0.0),
+                        type = o.optString("exType"),
+                        date = dateStr
+                    )
+                }
+
             }
 
             // Add item to the corresponding tab list

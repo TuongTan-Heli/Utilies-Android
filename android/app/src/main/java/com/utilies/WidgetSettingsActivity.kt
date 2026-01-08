@@ -10,12 +10,14 @@ import android.widget.SeekBar
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 
+
 class WidgetSettingsActivity : AppCompatActivity() {
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var bgPreview: View
     private lateinit var seekBar: SeekBar
     private lateinit var switchTheme: Switch
+    private lateinit var hideToBuySwitch: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,21 @@ class WidgetSettingsActivity : AppCompatActivity() {
 
         val savedTheme = WidgetSettings.getDarkMode(this, appWidgetId)
         switchTheme.isChecked = savedTheme
+        hideToBuySwitch = findViewById(R.id.hideToBuy)
 
+        // Load saved setting
+        val hideToBuy = WidgetSettings.getHideToBuy(this, appWidgetId)
+        hideToBuySwitch.isChecked = hideToBuy
+
+        // Save when user clicks Save button
+        btnSave.setOnClickListener {
+            updateWidget()
+            val result = Intent().apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
         // Update preview initially
         updatePreview()
 
@@ -66,6 +82,7 @@ class WidgetSettingsActivity : AppCompatActivity() {
             val result = Intent().apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             }
+
             setResult(RESULT_OK, result)
             finish()
         }
@@ -85,15 +102,19 @@ class WidgetSettingsActivity : AppCompatActivity() {
     }
 
     private fun updateWidget() {
-        val mgr = AppWidgetManager.getInstance(this)
-        val views = RemoteViews(packageName, R.layout.utilies_widget)
-        val alpha = seekBar.progress
-        val dark = switchTheme.isChecked
-        val color = (alpha shl 24) or if (dark) 0x000000 else 0xFFFFFF
-        views.setInt(R.id.widget_root, "setBackgroundColor", color)
-        mgr.updateAppWidget(appWidgetId, views)
+        // Save current settings
+        WidgetSettings.setAlpha(this, seekBar.progress, appWidgetId)
+        WidgetSettings.setDarkMode(this, switchTheme.isChecked, appWidgetId)
+        WidgetSettings.setHideToBuy(this, hideToBuySwitch.isChecked, appWidgetId)
 
+        // Trigger widget update
+        val intent = Intent(this, MyWidgetProvider::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
+        }
+        sendBroadcast(intent)
     }
+
 }
 
 

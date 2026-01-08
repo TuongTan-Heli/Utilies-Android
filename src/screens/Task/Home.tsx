@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
+import { Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { styles } from '../../styles/global';
 import { Button } from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -8,7 +8,6 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import CheckBox from '@react-native-community/checkbox';
 import NumericInput from 'react-native-numeric-input';
 import { getUserTask, processAddTask, processDeleteTask, processUpdateTask } from '../../controllers/taskController';
-import { getAll } from '../../controllers/currencyController';
 import { taskStyles } from '../../styles/task';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import validator from 'validator';

@@ -2,60 +2,90 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="#FFFFFFFF"
     android:orientation="vertical"
+    android:id="@+id/widget_root"
     android:padding="8dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/tabToDo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/to_do"
-            android:textSize="12sp" />
-
-        <Button
-
-            android:id="@+id/tabToBuy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/to_buy"
-            android:textSize="12sp" />
-
-        <Button
-
-            android:id="@+id/tabExpense"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/expense"
-            android:textSize="12sp" />
-
         <LinearLayout
-            android:id="@+id/btn_refresh"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="@android:drawable/ic_menu_rotate"
-            android:orientation="horizontal" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <LinearLayout
-            android:id="@+id/btn_add"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="@android:drawable/ic_input_add"
-            android:orientation="horizontal" />
+            <!-- First 3 buttons: 60% -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/tabToDo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/to_do"
+                    android:textSize="10sp" />
+                <Button
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/tabToBuy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/to_buy"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/tabExpense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/expense"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!-- Last 2 buttons: 40% -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <LinearLayout
+
+                    android:id="@+id/btn_refresh"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/rounded_directory_sync_24"
+                    android:orientation="horizontal" />
+
+                <LinearLayout
+                    android:id="@+id/btn_add"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@android:drawable/ic_menu_add"
+                    android:orientation="horizontal" />
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
 
@@ -63,5 +93,5 @@
         android:id="@+id/taskList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dividerHeight="4dp"/>
+        android:dividerHeight="4dp" />
 </LinearLayout>

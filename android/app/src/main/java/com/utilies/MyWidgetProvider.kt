@@ -8,11 +8,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import androidx.core.net.toUri
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.workDataOf
 
 class MyWidgetProvider : AppWidgetProvider() {
 
@@ -21,6 +23,26 @@ class MyWidgetProvider : AppWidgetProvider() {
         const val ACTION_MARK_DONE = "ACTION_MARK_DONE"
         const val ACTION_SWITCH_TAB = "ACTION_SWITCH_TAB"
         const val ACTION_QUICK_ADD = "ACTION_QUICK_ADD"
+        const val KEY_ACTION = "ACTION"
+        const val KEY_TASK_ID = "TASK_ID"
+    }
+
+    override fun onEnabled(context: Context?) {
+        super.onEnabled(context)
+
+        context?.let {
+            // Enqueue a refresh work without a specific widget ID
+            WorkManager.getInstance(it)
+                .enqueueUniqueWork(
+                    "widget_refresh",
+                    ExistingWorkPolicy.REPLACE,
+                    OneTimeWorkRequestBuilder<TaskRepository.WidgetSyncWorker>()
+                        .setInputData(
+                            workDataOf("ACTION" to MyWidgetProvider.ACTION_REFRESH)
+                        )
+                        .build()
+                )
+        }
     }
 
     override fun onUpdate(
@@ -30,6 +52,21 @@ class MyWidgetProvider : AppWidgetProvider() {
     ) {
         appWidgetIds.forEach { appWidgetId ->
             val views = RemoteViews(context.packageName, R.layout.utilies_widget)
+            //<editor-fold desc="Check first run to refresh">
+//            val isFirstRun = WidgetSettings.isFirstRun(context, appWidgetId)
+
+            val alpha = WidgetSettings.getAlpha(context, appWidgetId)
+            val dark = WidgetSettings.getDarkMode(context, appWidgetId)
+            val color = (alpha shl 24) or if (dark) 0x000000 else 0xFFFFFF
+            views.setInt(R.id.widget_root, "setBackgroundColor", color)
+            val hideToBuy = WidgetSettings.getHideToBuy(context, appWidgetId)
+            views.setViewVisibility(R.id.tabToBuy, if (hideToBuy) View.GONE else View.VISIBLE)
+
+//            if (isFirstRun) {
+
+//                WidgetSettings.setFirstRun(context, appWidgetId, false)
+//            }
+            //</editor-fold>
 
             //<editor-fold desc="Refresh intent">
             val refreshIntent = Intent(context, MyWidgetProvider::class.java)
@@ -101,7 +138,6 @@ class MyWidgetProvider : AppWidgetProvider() {
             views.setPendingIntentTemplate(R.id.taskList, markDonePI)
             //</editor-fold>
 
-
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
@@ -125,23 +161,45 @@ class MyWidgetProvider : AppWidgetProvider() {
             }
 
             ACTION_REFRESH -> {
+                val work = OneTimeWorkRequestBuilder<TaskRepository.WidgetSyncWorker>()
+                    .setInputData(
+                        workDataOf(KEY_ACTION to ACTION_REFRESH)
+                    )
+                    .build()
+
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
-                        "widget_refresh",
+                        "widget_sync",
                         ExistingWorkPolicy.REPLACE,
-                        OneTimeWorkRequestBuilder<TaskRepository.WidgetSyncWorker>().build()
+                        work
                     )
+                val mgr = AppWidgetManager.getInstance(context)
+                val ids = mgr.getAppWidgetIds(ComponentName(context, MyWidgetProvider::class.java))
+                mgr.notifyAppWidgetViewDataChanged(ids, R.id.taskList)
             }
 
             ACTION_MARK_DONE -> {
-                val itemId = intent.getStringExtra("ITEM_ID")
-                if (itemId == null) {
+                val itemId = intent.getStringExtra("ITEM_ID") ?: run {
                     Log.e("TaskWidget", "❌ MARK DONE received NULL ITEM_ID")
                     return
                 }
 
-                TaskRepository.markDone(context, itemId)
+                val work = OneTimeWorkRequestBuilder<TaskRepository.WidgetSyncWorker>()
+                    .setInputData(
+                        workDataOf(
+                            KEY_ACTION to ACTION_MARK_DONE,
+                            KEY_TASK_ID to itemId
+                        )
+                    )
+                    .build()
+
+                WorkManager.getInstance(context)
+                    .enqueue(work)
+
                 notify(context)
+                val mgr = AppWidgetManager.getInstance(context)
+                val ids = mgr.getAppWidgetIds(ComponentName(context, MyWidgetProvider::class.java))
+                mgr.notifyAppWidgetViewDataChanged(ids, R.id.taskList)
             }
 
         }

@@ -325,19 +325,10 @@ const SpendingHomeScreen = () => {
                                         placeholderTextColor="#888"
                                         style={staticStyles.input1}></TextInput>
                                     <View style={staticStyles.input1}>
-                                        <Picker
-                                            placeholder='Type'
-                                            selectedValue={Type}
-                                            onValueChange={setType}
-                                            style={{ color: 'black' }}>
-                                            <Picker.Item label="Daily" value="Daily" />
-                                            <Picker.Item label="Habit" value="Habit" />
-                                            <Picker.Item label="Gifts" value="Gifts" />
-                                            <Picker.Item label="Shopping" value="Shopping" />
-                                            <Picker.Item label="Bills" value="Bills" />
-                                            <Picker.Item label="Pet" value="Pet" />
-                                            <Picker.Item label="Others" value="Others" />
-                                        </Picker>
+                                        {knownTypes.map((t) => (
+                                            <Picker.Item key={t} label={t} value={t} />
+                                        ))}
+                                        <Picker.Item label="Others" value="Others" />
                                     </View>
                                     {
                                         Type == 'Others' &&

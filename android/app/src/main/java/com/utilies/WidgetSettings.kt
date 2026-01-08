@@ -26,13 +26,24 @@ object WidgetSettings {
         prefs.edit().putBoolean("dark_$widgetId", dark).apply()
     }
 
-    fun isFirstRun(context: Context, widgetId: Int): Boolean {
-        val prefs = context.getSharedPreferences(PREFS, 0)
-        return prefs.getBoolean(FIRST_RUN + widgetId, true)
+//    fun isFirstRun(context: Context, widgetId: Int): Boolean {
+//        val prefs = context.getSharedPreferences(PREFS, 0)
+//        return prefs.getBoolean(FIRST_RUN + widgetId, true)
+//    }
+//
+//    fun setFirstRun(context: Context, widgetId: Int, firstRun: Boolean) {
+//        val prefs = context.getSharedPreferences(PREFS, 0)
+//        prefs.edit().putBoolean(FIRST_RUN + widgetId, firstRun).apply()
+//    }
+
+    fun setHideToBuy(context: Context, hide: Boolean, appWidgetId: Int) {
+        val prefs = context.getSharedPreferences("widget_settings", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("hideToBuy_$appWidgetId", hide).apply()
     }
 
-    fun setFirstRun(context: Context, widgetId: Int, firstRun: Boolean) {
-        val prefs = context.getSharedPreferences(PREFS, 0)
-        prefs.edit().putBoolean(FIRST_RUN + widgetId, firstRun).apply()
+    fun getHideToBuy(context: Context, appWidgetId: Int): Boolean {
+        val prefs = context.getSharedPreferences("widget_settings", Context.MODE_PRIVATE)
+        return prefs.getBoolean("hideToBuy_$appWidgetId", false)
     }
+
 }

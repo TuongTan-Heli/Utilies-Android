@@ -42,9 +42,9 @@ class TaskRemoteService : RemoteViewsService() {
                 ).apply {
                     setTextViewText(R.id.title, item.title)
                     val iconRes = if (item.done == true) {
-                        android.R.drawable.checkbox_on_background
+                        R.drawable.round_check_circle_24
                     } else {
-                        android.R.drawable.checkbox_off_background
+                        R.drawable.baseline_radio_button_unchecked_24
                     }
                     setImageViewResource(R.id.btn_done, iconRes)
 
@@ -62,9 +62,9 @@ class TaskRemoteService : RemoteViewsService() {
                     setTextViewText(R.id.title, item.title)
                     setTextViewText(R.id.price, "$${item.price}")
                     val iconRes = if (item.done == true) {
-                        android.R.drawable.checkbox_on_background
+                        R.drawable.round_check_circle_24
                     } else {
-                        android.R.drawable.checkbox_off_background
+                       R.drawable.baseline_radio_button_unchecked_24
                     }
 
                     setImageViewResource(R.id.btn_done, iconRes)

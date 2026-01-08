@@ -37,7 +37,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Light"
+            android:text="Dark"
             android:textSize="16sp"/>
 
         <Switch
@@ -45,18 +45,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-    <View
-        android:id="@+id/bgPreview"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#FFFFFFFF"
-        android:layout_marginBottom="24dp"/>
+
     <SeekBar
         android:id="@+id/alphaSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:progress="255"
         android:max="255"/>
+    <View
+        android:id="@+id/bgPreview"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#FFFFFFFF"
+        android:layout_marginBottom="24dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="24dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hide to buy tab"
+            android:textSize="16sp"/>
+
+        <Switch
+            android:id="@+id/hideToBuy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <!-- Spacer to push buttons to bottom -->
     <Space
