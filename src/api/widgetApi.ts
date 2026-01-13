@@ -1,6 +1,6 @@
 import api from '../config/axiosInstance';
 
-export const quickAdd = async (Name: string, Type: string, Price: number, ExpenseType: string, session: string) => { 
+export const quickAdd = async (Name: string, Type: string, Price: number, ExpenseType: string, session: string, SelectedDate: Date) => { 
        
-    return await api.post('/quick-add', { Name, Type, Price, ExpenseType, session });
+    return await api.post('/quick-add', { Name, Type, Price, ExpenseType, session, SelectedDate });
 };

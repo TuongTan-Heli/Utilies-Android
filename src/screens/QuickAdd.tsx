@@ -7,7 +7,7 @@ import NumericInput from 'react-native-numeric-input';
 import { HandleQuickAdd } from '../controllers/widgetController';
 import { getToken } from '../utils/EncStorage';
 import LoadingBackground from '../utils/LoadingBackground';
-
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 const QuickAddScreen = ({ route }: any) => {
   const type =
@@ -25,7 +25,19 @@ const QuickAddScreen = ({ route }: any) => {
   const [CustomType, setCustomType] = useState('');
   const [ExpenseType, setExpenseType] = useState(knownTypes[0]);
   const [loading, setLoading] = useState(false);
+  const [SelectedDate, setSelectedDate] = useState(new Date());
 
+  const onChange = (event: any, selectedDate: any) => {
+    setSelectedDate(selectedDate);
+  }
+
+  const showDatePicker = () => {
+    DateTimePickerAndroid.open({
+      value: SelectedDate,
+      onChange,
+      mode: 'date',
+    });
+  }
   async function handleAdd() {
     const expenseType = ExpenseType === 'Others' ? CustomType : ExpenseType;
     const session = await getToken('SESSION_TOKEN');
@@ -34,7 +46,7 @@ const QuickAddScreen = ({ route }: any) => {
       return;
     }
     setLoading(true);
-    const status = await HandleQuickAdd(Name, Type, Price, expenseType, session);
+    const status = await HandleQuickAdd(Name, Type, Price, expenseType, session, SelectedDate);
     if (status === 200) {
       ToastAndroid.show('Added successfully', ToastAndroid.SHORT);
       refresh();
@@ -71,12 +83,12 @@ const QuickAddScreen = ({ route }: any) => {
           <Picker.Item label="Expense" value="Expense" />
         </Picker>
         {Type != 'Expense' && (
-          <TextInput
-            value={Name}
-            placeholder='Name'
-            onChangeText={setName}
-            placeholderTextColor="#888"
-            style={staticStyles.input1}></TextInput>
+            <TextInput
+              value={Name}
+              placeholder='Name'
+              onChangeText={setName}
+              placeholderTextColor="#888"
+              style={staticStyles.input1}></TextInput>
         )}
 
         {(Type === "To buy" || Type === "Expense") && (
@@ -110,6 +122,11 @@ const QuickAddScreen = ({ route }: any) => {
                 style={staticStyles.input1}
               />
             )}
+            <TextInput
+              placeholder='Pick a deadline'
+              value={SelectedDate.toDateString()}
+              onPress={() => showDatePicker()}
+              style={staticStyles.input1}></TextInput>
           </>
         )}
 
@@ -125,7 +142,5 @@ const QuickAddScreen = ({ route }: any) => {
 };
 
 export default QuickAddScreen;
-function useffect(arg0: () => void, arg1: any[]) {
-  throw new Error('Function not implemented.');
-}
+
 
