@@ -21,10 +21,30 @@ class TaskRemoteService : RemoteViewsService() {
 
         override fun onDataSetChanged() {
             val tab = WidgetState.getTab(context, appWidgetId)
-//            dataList = TaskRepository.getItemsForTab(context, tab) // your local DB/API
 
-            dataList = TaskRepository.WidgetCache.get(tab) // just read cached data
+// Get cached data first
+            val cached = TaskRepository.WidgetCache.get(tab)
+            if (!cached.isNullOrEmpty()) {
+                dataList = cached
+                return
+            }
+
+// Fallback to disk
+            val json = WidgetStorage.load(context)
+            if (json != null) {
+                val tabPairs: List<Pair<WidgetTab, MutableList<DataItem>>> = WidgetMapper.fromApi(json)
+
+                // Find the matching tab
+                dataList = tabPairs.firstOrNull { it.first == tab }?.second ?: mutableListOf()
+
+                // Optional: cache globally
+                TaskRepository.WidgetCache.set(tab, dataList)
+            } else {
+                dataList = mutableListOf()
+            }
+
         }
+
 
         override fun onDestroy() {
             dataList.clear()

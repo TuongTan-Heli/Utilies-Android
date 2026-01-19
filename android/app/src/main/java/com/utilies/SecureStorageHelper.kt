@@ -3,6 +3,7 @@ package com.utilies
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import org.json.JSONArray
 
 object SecureStorageHelper {
 
@@ -32,4 +33,29 @@ object SecureStorageHelper {
     fun remove(context: Context, key: String) {
         prefs(context).edit().remove(key).apply()
     }
+}
+
+object WidgetStorage {
+    private const val PREF = "WidgetStore"
+    private const val KEY_DATA = "DATA"
+    private const val KEY_TIME = "LAST_UPDATE"
+
+    fun save(context: Context, json: JSONArray) {
+        context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_DATA, json.toString())
+            .putLong(KEY_TIME, System.currentTimeMillis())
+            .apply()
+    }
+
+    fun load(context: Context): JSONArray? {
+        val raw = context
+            .getSharedPreferences(PREF, Context.MODE_PRIVATE)
+            .getString(KEY_DATA, null)
+        return raw?.let { JSONArray(it) }
+    }
+
+    fun lastUpdated(context: Context): Long =
+        context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+            .getLong(KEY_TIME, 0)
 }

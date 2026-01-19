@@ -22,13 +22,16 @@ object TaskRepository {
         ) ?: return emptyMap()
 
         val dataArray = res.optJSONArray("data") ?: JSONArray()
-        val tabItemsList = WidgetMapper.fromApi(dataArray)
+
+        WidgetStorage.save(context, dataArray)
+
+//        val tabItemsList = WidgetMapper.fromApi(dataArray)
 
         val map = mutableMapOf<WidgetTab, MutableList<DataItem>>()
-        for ((tab, items) in tabItemsList) {
-            map[tab] = items
-            WidgetCache.set(tab, items)
-        }
+//        for ((tab, items) in tabItemsList) {
+//            map[tab] = items
+//            WidgetCache.set(tab, items)
+//        }
 
         return map
     }

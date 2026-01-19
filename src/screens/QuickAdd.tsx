@@ -21,6 +21,7 @@ const QuickAddScreen = ({ route }: any) => {
   const [Type, setType] = useState(type);
   const [Name, setName] = useState('');
   const [Price, setPrice] = useState(0);
+  const [Note, setNote] = useState('');
   const knownTypes = ['Daily', 'Bills', 'Habit', 'Gifts', 'Shopping', 'Pet'];
   const [CustomType, setCustomType] = useState('');
   const [ExpenseType, setExpenseType] = useState(knownTypes[0]);
@@ -46,7 +47,7 @@ const QuickAddScreen = ({ route }: any) => {
       return;
     }
     setLoading(true);
-    const status = await HandleQuickAdd(Name, Type, Price, expenseType, session, SelectedDate);
+    const status = await HandleQuickAdd(Name, Type, Price, expenseType, session, SelectedDate, Note);
     if (status === 200) {
       ToastAndroid.show('Added successfully', ToastAndroid.SHORT);
       refresh();
@@ -83,12 +84,12 @@ const QuickAddScreen = ({ route }: any) => {
           <Picker.Item label="Expense" value="Expense" />
         </Picker>
         {Type != 'Expense' && (
-            <TextInput
-              value={Name}
-              placeholder='Name'
-              onChangeText={setName}
-              placeholderTextColor="#888"
-              style={staticStyles.input1}></TextInput>
+          <TextInput
+            value={Name}
+            placeholder='Name'
+            onChangeText={setName}
+            placeholderTextColor="#888"
+            style={staticStyles.input1}></TextInput>
         )}
 
         {(Type === "To buy" || Type === "Expense") && (
@@ -100,6 +101,13 @@ const QuickAddScreen = ({ route }: any) => {
 
         {Type === "Expense" && (
           <>
+            <TextInput
+              value={Note}
+              placeholder="Note"
+              onChangeText={setNote}
+              placeholderTextColor="#888"
+              style={staticStyles.input1}
+            />
             <View style={staticStyles.input1}>
               <Picker
                 placeholder="Type"
@@ -123,7 +131,7 @@ const QuickAddScreen = ({ route }: any) => {
               />
             )}
             <TextInput
-              placeholder='Pick a deadline'
+              placeholder='Date'
               value={SelectedDate.toDateString()}
               onPress={() => showDatePicker()}
               style={staticStyles.input1}></TextInput>
